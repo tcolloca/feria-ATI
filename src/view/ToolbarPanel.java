@@ -6,6 +6,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import model.ImageManager;
 import util.FileHelper;
+import util.ToolbarImageFactory;
 
 import static view.ViewConstants.OPTIONS_SPACING;
 
@@ -22,15 +23,18 @@ public class OptionsPanel {
     hBox.setStyle("-fx-background-color: #369;");
     hBox.setVisible(true);
 
-    hBox.getChildren().addAll(initCreateCircleButton(), initCreateRectangleButton());
+    hBox.getChildren().addAll(negativeButton(), initCreateRectangleButton());
   }
 
-  private Button initCreateCircleButton() {
-    Button button = new Button("Create Circle Image...");
+  private Button negativeButton() {
+    Button button = new Button();
+    button.setGraphic(ToolbarImageFactory.NEGATIVE);
+    button.setMaxWidth(10);
     button.setOnAction((actionEvent) -> {
           FileHelper.saveImage(imageManager.getCircleImage());
         }
     );
+    button.setFocusTraversable(false);
     return button;
   }
 
@@ -40,6 +44,7 @@ public class OptionsPanel {
           FileHelper.saveImage(imageManager.getRectangleImage());
         }
     );
+
     return button;
   }
 

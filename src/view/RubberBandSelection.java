@@ -7,24 +7,26 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeLineCap;
+import model.ImageManager;
 
- /**
+/**
  *  Drag rectangle with mouse cursor in order to get selection bounds
  */
 public class RubberBandSelection {
 
-  final DragContext dragContext = new DragContext();
-  Rectangle rect = new Rectangle();
+  private ImageManager imageManager;
+  private final DragContext dragContext = new DragContext();
+  private Rectangle rect = new Rectangle();
 
-  Group group;
+  private Group group;
 
 
   public Bounds getBounds() {
     return rect.getBoundsInParent();
   }
 
-  public RubberBandSelection(Group group) {
-
+  public RubberBandSelection(Group group, ImageManager imageManager) {
+    this.imageManager = imageManager;
     this.group = group;
 
     rect = new Rectangle( 0,0,0,0);
@@ -39,72 +41,59 @@ public class RubberBandSelection {
 
   }
 
-  EventHandler<MouseEvent> onMousePressedEventHandler = new EventHandler<MouseEvent>() {
+  EventHandler<MouseEvent> onMousePressedEventHandler = (event) -> {
+    if( event.isSecondaryButtonDown())
+      return;
 
-    @Override
-    public void handle(MouseEvent event) {
+    // remove old rect
+    rect.setX(0);
+    rect.setY(0);
+    rect.setWidth(0);
+    rect.setHeight(0);
 
-      if( event.isSecondaryButtonDown())
-        return;
+    group.getChildren().remove(rect);
 
-      // remove old rect
-      rect.setX(0);
-      rect.setY(0);
-      rect.setWidth(0);
-      rect.setHeight(0);
+    // prepare new drag operation
+    dragContext.mouseAnchorX = event.getX();
+    dragContext.mouseAnchorY = event.getY();
 
-      group.getChildren().remove(rect);
+    rect.setX(dragContext.mouseAnchorX);
+    rect.setY(dragContext.mouseAnchorY);
+    rect.setWidth(0);
+    rect.setHeight(0);
 
-
-      // prepare new drag operation
-      dragContext.mouseAnchorX = event.getX();
-      dragContext.mouseAnchorY = event.getY();
-
-      rect.setX(dragContext.mouseAnchorX);
-      rect.setY(dragContext.mouseAnchorY);
-      rect.setWidth(0);
-      rect.setHeight(0);
-
-      group.getChildren().add(rect);
-    }
+    group.getChildren().add(rect);
   };
 
-  EventHandler<MouseEvent> onMouseDraggedEventHandler = new EventHandler<MouseEvent>() {
+  EventHandler<MouseEvent> onMouseDraggedEventHandler = (event) -> {
+    if( event.isSecondaryButtonDown())
+      return;
 
-    @Override
-    public void handle(MouseEvent event) {
+    double offsetX = event.getX() - dragContext.mouseAnchorX;
+    double offsetY = event.getY() - dragContext.mouseAnchorY;
 
-      if( event.isSecondaryButtonDown())
-        return;
-
-      double offsetX = event.getX() - dragContext.mouseAnchorX;
-      double offsetY = event.getY() - dragContext.mouseAnchorY;
-
-      if( offsetX > 0)
-        rect.setWidth( offsetX);
-      else {
-        rect.setX(event.getX());
-        rect.setWidth(dragContext.mouseAnchorX - rect.getX());
-      }
-
-      if( offsetY > 0) {
-        rect.setHeight( offsetY);
-      } else {
-        rect.setY(event.getY());
-        rect.setHeight(dragContext.mouseAnchorY - rect.getY());
-      }
+    if( offsetX > 0)
+      rect.setWidth( offsetX);
+    else {
+      rect.setX(event.getX());
+      rect.setWidth(dragContext.mouseAnchorX - rect.getX());
+    }
+    if( offsetY > 0) {
+      rect.setHeight( offsetY);
+    } else {
+      rect.setY(event.getY());
+      rect.setHeight(dragContext.mouseAnchorY - rect.getY());
     }
   };
 
 
-  EventHandler<MouseEvent> onMouseReleasedEventHandler = new EventHandler<MouseEvent>() {
+  EventHandler<MouseEvent> onMouseReleasedEventHandler = (event) -> {
+    if( event.isSecondaryButtonDown())
+      return;
 
-    @Override
-    public void handle(MouseEvent event) {
-
-      if(event.isSecondaryButtonDown())
-        return;
-    }
+    imageManager.checkPixelsColor(
+        (int) Math.round(getBounds().getMinX()), (int) Math.round(getBounds().getMinY()),
+        (int) Math.round(getBounds().getWidth()), (int) Math.round(getBounds().getHeight()));
   };
 
    public void reset() {

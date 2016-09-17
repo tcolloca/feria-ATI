@@ -1,5 +1,6 @@
 package view;
 
+import com.goodengineer.atibackend.transformation.RectBorderTransformation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -16,7 +17,7 @@ import util.ImageEventAdapter;
 import util.ImageEventDispatcher;
 
 import static view.ViewConstants.COLOR_BOX_SIZE;
-import static view.ViewConstants.OPTIONS_SPACING;
+import static view.ViewConstants.TOOLBAR_SPACING;
 
 public class InfoPanel extends ImageEventAdapter {
 
@@ -35,7 +36,7 @@ public class InfoPanel extends ImageEventAdapter {
   InfoPanel(ImageManager imageManager) {
     this.imageManager = imageManager;
 
-    hBox.setSpacing(OPTIONS_SPACING);
+    hBox.setSpacing(TOOLBAR_SPACING);
     hBox.setAlignment(Pos.CENTER);
     hBox.setStyle("-fx-background-color: #69B;");
     hBox.setVisible(true);
@@ -57,16 +58,17 @@ public class InfoPanel extends ImageEventAdapter {
   }
 
   @Override
-  public void onCheckPixelsColor(int x, int y, int width, int height, int rgb) {
-    currentColorBox.setFill(ColorHelper.convertToColor(rgb));
+  public void onCheckPixelsColor(int x, int y, int width, int height,
+                                 int red, int green, int blue) {
+    currentColorBox.setFill(ColorHelper.convertToColor(red, green, blue));
     selectionX = x;
     selectionY = y;
     selectionWidth = width;
     selectionHeight = height;
     selectionInfoText.setText(
         String.format("X: %d, Y: %d, W: %d, H: %d, Pixels: %d\n Avg: #%06x R: %d G: %d B: %d",
-            x, y, width, height, width*height, rgb & 0xFFFFFF,
-            ColorHelper.getRed(rgb), ColorHelper.getGreen(rgb), ColorHelper.getBlue(rgb)));
+            x, y, width, height, width*height, ColorHelper.convertToRgb(red, green, blue),
+            red, green, blue));
   }
 
   private Rectangle initColorBox() {
@@ -89,15 +91,18 @@ public class InfoPanel extends ImageEventAdapter {
       stage.setScene(scene);
       stage.show();
     });
+    button.setFocusTraversable(false);
     return button;
   }
 
   private Button initApplyColorButton() {
     Button button = new Button("Apply Color");
     button.setOnAction((e1) -> {
-      imageManager.paintPixels(selectionX, selectionY, selectionWidth, selectionHeight,
-          ColorHelper.convertToRgb(((Color) newColorBox.getFill())));
+      imageManager.applyTransformation(new RectBorderTransformation(selectionX, selectionY,
+          selectionWidth + selectionX - 1, selectionHeight + selectionY - 1,
+          ColorHelper.convertToRgb(((Color) newColorBox.getFill()))));
     });
+    button.setFocusTraversable(false);
     return button;
   }
 

@@ -1,11 +1,16 @@
 package util;
 
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
 public class ColorHelper {
 
   public static Color convertToColor(int rgb) {
     return Color.rgb(getRed(rgb), getGreen(rgb), getBlue(rgb));
+  }
+
+  public static Paint convertToColor(int red, int green, int blue) {
+    return convertToColor(convertToRgb(red, green, blue));
   }
 
   public static int convertToRgb(Color c) {

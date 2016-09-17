@@ -31,15 +31,12 @@ public class BufferedImageColorImageTranslator implements ColorImageTranslator<B
   @Override
   public BufferedImage translateBackward(ColorImage colorImage) {
     BufferedImage bufferedImage =
-        new BufferedImage(colorImage.getWidth(), colorImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        new BufferedImage(colorImage.getWidth(), colorImage.getHeight(), BufferedImage.TYPE_INT_RGB);
 
-    Band redBand = colorImage.getRedBand();
-    Band greenBand = colorImage.getGreenBand();
-    Band blueBand = colorImage.getBlueBand();
     for (int i = 0; i < colorImage.getWidth(); i++) {
       for (int j = 0; j < colorImage.getHeight(); j++) {
         bufferedImage.setRGB(i, j, ColorHelper.convertToRgb(
-            redBand.getPixel(i, j), greenBand.getPixel(i, j), blueBand.getPixel(i, j)));
+            colorImage.getRed(i, j), colorImage.getGreen(i, j), colorImage.getBlue(i, j)));
       }
     }
 

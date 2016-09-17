@@ -12,7 +12,7 @@ import static view.ViewConstants.*;
 
 public class FileHelper {
 
-  private static String lastFileUploadedExt;
+  private static final String DEFAULT_EXT = "png";
 
   /**
    * Returns the name of the file chosen.
@@ -48,12 +48,10 @@ public class FileHelper {
     if (status == JFileChooser.APPROVE_OPTION) {
       String fileName = fileChooser.getSelectedFile().getAbsolutePath();
       System.out.println(fileName);
-      String ext = "bmp";
+      String ext = DEFAULT_EXT;
       if (fileName.matches(".*\\.(png|bmp|ppm|raw)$")) {
         ext = fileName.split("\\.")[1];
-        System.out.println(ext);
       }
-      System.out.println(fileName.split("\\.")[0] + "." + ext);
       File outputFile = new File(fileName.split("\\.")[0] + "." + ext);
       try {
         ImageIO.write(image, ext, outputFile);

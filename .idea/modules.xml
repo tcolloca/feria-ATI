@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ATI-GUI-Desktop.iml" filepath="$PROJECT_DIR$/ATI-GUI-Desktop.iml" />
-      <module fileurl="file://$USER_HOME$/projects/ati-backend/ati-backend.iml" filepath="$USER_HOME$/projects/ati-backend/ati-backend.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../ati-backend/ati-backend.iml" filepath="$PROJECT_DIR$/../ati-backend/ati-backend.iml" />
     </modules>
   </component>
 </project>

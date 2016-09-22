@@ -2,17 +2,23 @@ package view;
 
 import com.goodengineer.atibackend.model.ColorImage;
 import com.goodengineer.atibackend.transformation.*;
+import com.goodengineer.atibackend.transformation.filter.FilterAndZeroCrossTransformation;
 import com.goodengineer.atibackend.transformation.filter.FilterTransformation;
 import com.goodengineer.atibackend.transformation.filter.MedianFilterTransformation;
+import com.goodengineer.atibackend.transformation.filter.MultiFilterTransformation;
+import com.goodengineer.atibackend.transformation.filter.pixelRules.MaxPixelRule;
+import com.goodengineer.atibackend.transformation.filter.pixelRules.NormPixelRule;
 import com.goodengineer.atibackend.transformation.noise.ExponentialNoiseTransformation;
 import com.goodengineer.atibackend.transformation.noise.GaussNoiseTransformation;
 import com.goodengineer.atibackend.transformation.noise.RayleighNoiseTransformation;
 import com.goodengineer.atibackend.transformation.noise.SaltAndPepperNoiseTransformation;
+import com.goodengineer.atibackend.util.MaskFactory.Direction;
 import com.goodengineer.atibackend.util.MaskFactory;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.layout.HBox;
 import model.ImageManager;
+import sun.rmi.runtime.Log;
 import util.BufferedImageColorImageTranslator;
 import util.FileHelper;
 import util.ToolbarImages;
@@ -22,6 +28,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 import static view.ViewConstants.TOOLBAR_SPACING;
 
@@ -56,7 +63,13 @@ public class ToolbarPanel {
         averageFilterButton(),
         medianFilterButton(),
         gaussianFilterButton(),
-        hipassFilterButton());
+        hipassFilterButton(),
+        sobelFilterButton(),
+        kirshFilterButton(),
+        itemAFilterButton(),
+        laplaceFilterButton(),
+        LoGFilterButton(),
+        isotropicFilterButton());
   }
 
   private Node negativeButton() {
@@ -289,7 +302,7 @@ public class ToolbarPanel {
               new Field("Sigma:", "1.5")));
           dialog.show();
           int size = dialog.getResult(0, Integer.class);
-          double sigma = dialog.getResult(0, Double.class);
+          double sigma = dialog.getResult(1, Double.class);
           imageManager.applyTransformation(
               new FilterTransformation(MaskFactory.gauss(size, sigma)));
         }).getNode();
@@ -304,6 +317,128 @@ public class ToolbarPanel {
           int size = dialog.getResult(0, Integer.class);
           imageManager.applyTransformation(
               new FilterTransformation(MaskFactory.hiPass(size)));
+        }).getNode();
+  }
+
+  private Node sobelFilterButton() {
+    return new ToolbarButton("Sobel Filter", ToolbarImages.FILTER_SOBEL,
+        actionEvent -> {
+          CustomInputTextDialog dialog = new CustomInputTextDialog("Sobel Filter", Arrays.asList(
+              new Field("Directional:", "false")));
+          dialog.show();
+          boolean isDirectional = Boolean.parseBoolean(dialog.getResult(0, String.class));
+          MultiFilterTransformation.PixelRule rule = isDirectional ? new MaxPixelRule() : new NormPixelRule();
+          List<double[][]> masks = isDirectional ?
+              Arrays.asList(
+                MaskFactory.sobel(Direction.E),
+                MaskFactory.sobel(Direction.SE),
+                MaskFactory.sobel(Direction.S),
+                  MaskFactory.sobel(Direction.SW))
+              : Arrays.asList(MaskFactory.sobel(Direction.E), MaskFactory.sobel(Direction.S));
+          imageManager.applyTransformation(
+              new MultiFilterTransformation(rule, masks));
+        }).getNode();
+  }
+
+  private Node prewittFilterButton() {
+    return new ToolbarButton("Prewitt Filter", ToolbarImages.FILTER_PREWITT,
+        actionEvent -> {
+          CustomInputTextDialog dialog = new CustomInputTextDialog("Prewitt Filter", Arrays.asList(
+              new Field("Directional:", "false")));
+          dialog.show();
+          boolean isDirectional = Boolean.parseBoolean(dialog.getResult(0, String.class));
+          MultiFilterTransformation.PixelRule rule = isDirectional ? new MaxPixelRule() : new NormPixelRule();
+          List<double[][]> masks = isDirectional ?
+              Arrays.asList(
+                  MaskFactory.prewitt(Direction.E),
+                  MaskFactory.prewitt(Direction.SE),
+                  MaskFactory.prewitt(Direction.S),
+                  MaskFactory.prewitt(Direction.SW))
+              : Arrays.asList(MaskFactory.prewitt(Direction.E), MaskFactory.prewitt(Direction.S));
+          imageManager.applyTransformation(
+              new MultiFilterTransformation(rule, masks));
+        }).getNode();
+  }
+
+  private Node kirshFilterButton() {
+    return new ToolbarButton("Kirsh Filter", ToolbarImages.FILTER_KIRSH,
+        actionEvent -> {
+          CustomInputTextDialog dialog = new CustomInputTextDialog("Kirsh Filter", Arrays.asList(
+              new Field("Directional:", "false")));
+          dialog.show();
+          boolean isDirectional = Boolean.parseBoolean(dialog.getResult(0, String.class));
+          MultiFilterTransformation.PixelRule rule = isDirectional ? new MaxPixelRule() : new NormPixelRule();
+          List<double[][]> masks = isDirectional ?
+              Arrays.asList(
+                  MaskFactory.kirsh(Direction.E),
+                  MaskFactory.kirsh(Direction.SE),
+                  MaskFactory.kirsh(Direction.S),
+                  MaskFactory.kirsh(Direction.SW))
+              : Arrays.asList(MaskFactory.kirsh(Direction.E), MaskFactory.kirsh(Direction.S));
+          imageManager.applyTransformation(
+              new MultiFilterTransformation(rule, masks));
+        }).getNode();
+  }
+
+  private Node itemAFilterButton() {
+    return new ToolbarButton("Item a) Filter", ToolbarImages.FILTER_A,
+        actionEvent -> {
+          CustomInputTextDialog dialog = new CustomInputTextDialog("Item a) Filter", Arrays.asList(
+              new Field("Directional:", "false")));
+          dialog.show();
+          boolean isDirectional = Boolean.parseBoolean(dialog.getResult(0, String.class));
+          MultiFilterTransformation.PixelRule rule = isDirectional ? new MaxPixelRule() : new NormPixelRule();
+          List<double[][]> masks = isDirectional ?
+              Arrays.asList(
+                  MaskFactory.itemA(Direction.E),
+                  MaskFactory.itemA(Direction.SE),
+                  MaskFactory.itemA(Direction.S),
+                  MaskFactory.itemA(Direction.SW))
+              : Arrays.asList(MaskFactory.itemA(Direction.E), MaskFactory.itemA(Direction.S));
+          imageManager.applyTransformation(
+              new MultiFilterTransformation(rule, masks));
+        }).getNode();
+  }
+
+  private Node laplaceFilterButton() {
+    return new ToolbarButton("Laplace Filter", ToolbarImages.FILTER_LAPLACE,
+        actionEvent -> {
+          CustomInputTextDialog dialog = new CustomInputTextDialog("Laplace Filter", Arrays.asList(
+              new Field("Threshold:", "0")));
+          dialog.show();
+          double threshold = dialog.getResult(0, Double.class);
+          imageManager.applyTransformation(
+              new FilterAndZeroCrossTransformation(threshold, MaskFactory.laplacian()));
+        }).getNode();
+  }
+
+  private Node LoGFilterButton() {
+    return new ToolbarButton("LoG Filter", ToolbarImages.FILTER_LOG,
+        actionEvent -> {
+          CustomInputTextDialog dialog = new CustomInputTextDialog("LoG Filter", Arrays.asList(
+              new Field("Threshold:", "0"),
+              new Field("Size:", "3"),
+              new Field("Sigma:", "1.5")));
+          dialog.show();
+          double threshold = dialog.getResult(0, Double.class);
+          int size = dialog.getResult(1, Integer.class);
+          double sigma = dialog.getResult(2, Double.class);
+          imageManager.applyTransformation(
+              new FilterAndZeroCrossTransformation(threshold, MaskFactory.LoG(size, sigma)));
+        }).getNode();
+  }
+
+  private Node isotropicFilterButton() {
+    return new ToolbarButton("Isotropic Diffusion", ToolbarImages.FILTER_ISOTROPIC,
+        actionEvent -> {
+          CustomInputTextDialog dialog = new CustomInputTextDialog("Isotropic Diffusion", Arrays.asList(
+              new Field("Size:", "5"),
+              new Field("Sigma:", "1.5")));
+          dialog.show();
+          int size = dialog.getResult(0, Integer.class);
+          double sigma = dialog.getResult(0, Double.class);
+          imageManager.applyTransformation(
+              new FilterTransformation(MaskFactory.isotropic(size, sigma)));
         }).getNode();
   }
 

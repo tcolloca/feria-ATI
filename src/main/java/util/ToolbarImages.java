@@ -10,6 +10,8 @@ public final class ToolbarImages {
 
   public static final ImageView NEGATIVE = getImage("negative.png");
   public static final ImageView THRESHOLD = getImage("threshold.png");
+  public static final ImageView THRESHOLD_GLOBAL = getImage("threshold_global.png");
+  public static final ImageView THRESHOLD_OTSU = getImage("threshold_otsu.png");
   public static final ImageView CONTRAST = getImage("contrast.png");
   public static final ImageView DYNAMIC_RANGE = getImage("dynamic_range.png");
   public static final ImageView EQUALIZE = getImage("equalize.png");
@@ -26,12 +28,20 @@ public final class ToolbarImages {
   public static final ImageView FILTER_MEDIAN = getImage("filter_median.png");
   public static final ImageView FILTER_GAUSS = getImage("filter_gauss.png");
   public static final ImageView FILTER_HIPASS = getImage("filter_hipass.png");
+  public static final ImageView FILTER_SOBEL = getImage("filter_sobel.png");
+  public static final ImageView FILTER_PREWITT = getImage("filter_prewitt.png");
+  public static final ImageView FILTER_KIRSH = getImage("filter_kirsh.png");
+  public static final ImageView FILTER_A = getImage("filter_a.png");
+  public static final ImageView FILTER_LAPLACE = getImage("filter_laplace.png");
+  public static final ImageView FILTER_LOG = getImage("filter_log.png");
+  public static final ImageView FILTER_ISOTROPIC = getImage("filter_isotropic.png");
+  public static final ImageView FILTER_ANISOTROPIC = getImage("filter_anisotropic.png");
 
   private static ImageView getImage(String name) {
     try {
       ImageView imageView = new ImageView(new Image(new FileInputStream("resources/" + name)));
-      imageView.setFitWidth(15);
-      imageView.setFitHeight(15);
+      imageView.setFitWidth(30);
+      imageView.setFitHeight(30);
       return imageView;
     } catch (FileNotFoundException e) {
       // TODO: Auto-generated code.

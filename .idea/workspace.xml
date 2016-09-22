@@ -2,63 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fbbd8f4a-cf77-4a17-a4a4-3851dd327797" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pom.xml" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/ATI-GUI-Desktop/model/ImageManager$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/ATI-GUI-Desktop/model/ImageManager$BandType.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/ATI-GUI-Desktop/model/ImageManager.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/ATI-GUI-Desktop/proof.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/ATI-GUI-Desktop/util/BufferedImageColorImageTranslator.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/ATI-GUI-Desktop/util/ColorHelper.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/ATI-GUI-Desktop/util/FileHelper.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/ATI-GUI-Desktop/util/ImageEventAdapter.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/ATI-GUI-Desktop/util/ImageEventDispatcher.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/ATI-GUI-Desktop/util/ImageEventListener.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/ATI-GUI-Desktop/util/ToolbarImages.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/ATI-GUI-Desktop/view/CustomInputTextDialog.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/ATI-GUI-Desktop/view/EditMenu.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/ATI-GUI-Desktop/view/Field.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/ATI-GUI-Desktop/view/FileMenu.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/ATI-GUI-Desktop/view/GuiMenuBar.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/ATI-GUI-Desktop/view/HistogramDialog.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/ATI-GUI-Desktop/view/ImagePanel.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/ATI-GUI-Desktop/view/InfoPanel.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/ATI-GUI-Desktop/view/Main$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/ATI-GUI-Desktop/view/Main.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/ATI-GUI-Desktop/view/RubberBandSelection$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/ATI-GUI-Desktop/view/RubberBandSelection$DragContext.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/ATI-GUI-Desktop/view/RubberBandSelection.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/ATI-GUI-Desktop/view/ToolbarButton.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/ATI-GUI-Desktop/view/ToolbarPanel.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/ATI-GUI-Desktop/view/ViewConstants.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/model/ImageManager.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/proof.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/util/BufferedImageColorImageTranslator.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/util/ColorHelper.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/util/FileHelper.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/util/ImageEventAdapter.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/util/ImageEventDispatcher.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/util/ImageEventListener.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/util/ToolbarImages.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/view/CustomInputTextDialog.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/view/EditMenu.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/view/Field.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/view/FileMenu.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/view/GuiMenuBar.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/view/HistogramDialog.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/view/ImagePanel.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/view/InfoPanel.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/view/Main.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/view/RubberBandSelection.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/view/ToolbarButton.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/view/ToolbarPanel.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/view/ViewConstants.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/compiler.xml" afterPath="$PROJECT_DIR$/.idea/compiler.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ATI-GUI-Desktop.iml" afterPath="$PROJECT_DIR$/ATI-GUI-Desktop.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/filter_hipass.png" afterPath="$PROJECT_DIR$/resources/filter_hipass.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/util/ToolbarImages.java" afterPath="$PROJECT_DIR$/src/main/java/util/ToolbarImages.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/view/ToolbarPanel.java" afterPath="$PROJECT_DIR$/src/main/java/view/ToolbarPanel.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/view/ViewConstants.java" afterPath="$PROJECT_DIR$/src/main/java/view/ViewConstants.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ati-backend/src/com/goodengineer/atibackend/transformation/ConstrastTransformation.java" afterPath="$PROJECT_DIR$/../ati-backend/src/com/goodengineer/atibackend/transformation/ConstrastTransformation.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ati-backend/src/com/goodengineer/atibackend/transformation/filter/MultiFilterTransformation.java" afterPath="$PROJECT_DIR$/../ati-backend/src/com/goodengineer/atibackend/transformation/filter/MultiFilterTransformation.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ati-backend/src/com/goodengineer/atibackend/util/MaskFactory.java" afterPath="$PROJECT_DIR$/../ati-backend/src/com/goodengineer/atibackend/util/MaskFactory.java" />
     </list>
     <ignored path="ATI-GUI-Desktop.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -85,11 +35,51 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="600">
-      <file leaf-file-name="ImageManager.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/model/ImageManager.java">
+      <file leaf-file-name="ViewConstants.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/view/ViewConstants.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-981">
-              <caret line="237" column="2" selection-start-line="237" selection-start-column="2" selection-end-line="237" selection-end-column="2" />
+            <state relative-caret-position="332">
+              <caret line="21" column="46" selection-start-line="21" selection-start-column="46" selection-end-line="21" selection-end-column="46" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Main.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/view/Main.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="289">
+              <caret line="28" column="35" selection-start-line="28" selection-start-column="35" selection-end-line="28" selection-end-column="35" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ToolbarImages.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/util/ToolbarImages.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="186">
+              <caret line="43" column="31" selection-start-line="43" selection-start-column="31" selection-end-line="43" selection-end-column="31" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ToolbarButton.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/view/ToolbarButton.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="122">
+              <caret line="13" column="2" selection-start-line="13" selection-start-column="2" selection-end-line="13" selection-end-column="2" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ToolbarPanel.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/view/ToolbarPanel.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="173">
+              <caret line="80" column="45" selection-start-line="80" selection-start-column="45" selection-end-line="80" selection-end-column="45" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -97,34 +87,31 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="HistogramDialog.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/view/HistogramDialog.java">
+      <file leaf-file-name="MaskFactory.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../ati-backend/src/com/goodengineer/atibackend/util/MaskFactory.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="663">
-              <caret line="49" column="29" selection-start-line="49" selection-start-column="29" selection-end-line="49" selection-end-column="29" />
-              <folding>
-                <element signature="e#441#442#0" expanded="true" />
-                <element signature="e#471#472#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="FileMenu.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/view/FileMenu.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1020">
-              <caret line="66" column="65" selection-start-line="66" selection-start-column="7" selection-end-line="66" selection-end-column="65" />
+            <state relative-caret-position="170">
+              <caret line="53" column="32" selection-start-line="53" selection-start-column="29" selection-end-line="53" selection-end-column="32" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Float.java" pinned="false" current-in-tab="false">
-        <entry file="jar://C:/Program Files/Java/jdk1.8.0_101/src.zip!/java/lang/Float.java">
+      <file leaf-file-name="CustomInputTextDialog.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/view/CustomInputTextDialog.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="493">
-              <caret line="54" column="47" selection-start-line="54" selection-start-column="30" selection-end-line="54" selection-end-column="47" />
+            <state relative-caret-position="222">
+              <caret line="65" column="0" selection-start-line="65" selection-start-column="0" selection-end-line="65" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MultiFilterTransformation.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../ati-backend/src/com/goodengineer/atibackend/transformation/filter/MultiFilterTransformation.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="170">
+              <caret line="15" column="35" selection-start-line="15" selection-start-column="35" selection-end-line="15" selection-end-column="35" />
               <folding />
             </state>
           </provider>
@@ -150,10 +137,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/util/ImageOpener.java" />
-        <option value="$PROJECT_DIR$/src/util/ImageManager.java" />
-        <option value="$PROJECT_DIR$/src/util/EventDispatcher.java" />
-        <option value="$PROJECT_DIR$/src/util/IMageEventDispatcher.java" />
         <option value="$PROJECT_DIR$/src/view/WebColorField.java" />
         <option value="$PROJECT_DIR$/src/view/MyCustomColorDialog.java" />
         <option value="$PROJECT_DIR$/src/view/IntegerField.java" />
@@ -201,6 +184,10 @@
         <option value="$PROJECT_DIR$/src/main/java/com/goodengineer/atibackend/util/DistributionRandom.java" />
         <option value="$PROJECT_DIR$/src/main/java/view/HistogramDialog.java" />
         <option value="$PROJECT_DIR$/src/main/java/model/ImageManager.java" />
+        <option value="$PROJECT_DIR$/../ati-backend/src/com/goodengineer/atibackend/transformation/filter/MultiFilterTransformation.java" />
+        <option value="$PROJECT_DIR$/src/main/java/view/ToolbarPanel.java" />
+        <option value="$PROJECT_DIR$/src/main/java/util/ToolbarImages.java" />
+        <option value="$PROJECT_DIR$/src/main/java/view/ViewConstants.java" />
       </list>
     </option>
   </component>
@@ -220,9 +207,8 @@
     <treeState />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
-    <option name="width" value="1376" />
+    <option name="x" value="-6" />
+    <option name="width" value="1364" />
     <option name="height" value="744" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
@@ -351,7 +337,33 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="model" />
+              <option name="myItemId" value="view" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ATI-GUI-Desktop" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ATI-GUI-Desktop" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="util" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -366,12 +378,12 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="settings.editor.selected.configurable" value="reference.projectsettings.compiler.javacompiler" />
+    <property name="settings.editor.selected.configurable" value="preferences.sourceCode.Java" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../ati-backend/ati-backend.iml" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../ati-backend" />
   </component>
   <component name="Push.Settings">
     <excluded-roots>
@@ -676,8 +688,8 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1376" height="744" extended-state="6" />
-    <editor active="false" />
+    <frame x="-6" y="0" width="1364" height="744" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -687,11 +699,11 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24447949" sideWeight="0.50441176" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="top" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32903227" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.0" sideWeight="0.49558824" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.33753943" sideWeight="0.49558824" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32949513" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.33014706" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.33308604" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -762,10 +774,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$USER_HOME$/projects/ati-backend/src/com/goodengineer/atibackend/transformation/RectBorderTransformation.java" />
-    <entry file="file://$USER_HOME$/projects/ati-backend/src/com/goodengineer/atibackend/transformation/ScaleTransformation.java" />
-    <entry file="file://$USER_HOME$/projects/ati-backend/src/com/goodengineer/atibackend/transformation/SubstractImageTransformation.java" />
-    <entry file="file://$USER_HOME$/projects/ati-backend/src/com/goodengineer/atibackend/transformation/SumImageTransformation.java" />
     <entry file="file://$USER_HOME$/projects/ati-backend/src/com/goodengineer/atibackend/transformation/Transformation.java" />
     <entry file="file://$USER_HOME$/projects/ati-backend/src/com/goodengineer/atibackend/transformation/ThresholdingTransformation.java" />
     <entry file="file://$USER_HOME$/projects/ati-backend/src/com/goodengineer/atibackend/transformation/noise/GaussNoiseTransformation.java" />
@@ -773,40 +781,7 @@
     <entry file="file://$USER_HOME$/projects/ati-backend/src/com/goodengineer/atibackend/transformation/filter/FilterTransformation.java" />
     <entry file="file://$USER_HOME$/projects/ati-backend/src/com/goodengineer/atibackend/transformation/ConstrastTransformation.java" />
     <entry file="file://$USER_HOME$/projects/ati-backend/src/com/goodengineer/atibackend/transformation/DynamicRangeCompressionTransformation.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/view/CustomInputTextDialog.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="16" column="0" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/view/ToolbarPanel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2669">
-          <caret line="180" column="24" selection-start-line="180" selection-start-column="24" selection-end-line="180" selection-end-column="24" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#12652#12653#0" expanded="false" />
-            <element signature="e#12673#12674#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/view/ToolbarButton.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="13" column="52" selection-start-line="13" selection-start-column="52" selection-end-line="13" selection-end-column="52" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_60/javafx-src.zip!/javafx/event/EventHandler.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/view/ViewConstants.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="13" column="16" selection-start-line="13" selection-start-column="16" selection-end-line="13" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/util/BufferedImageColorImageTranslator.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="204">
@@ -818,6 +793,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="39">
           <caret line="311" column="11" selection-start-line="311" selection-start-column="11" selection-end-line="311" selection-end-column="11" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -982,6 +958,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="782">
           <caret line="54" column="16" selection-start-line="54" selection-start-column="16" selection-end-line="54" selection-end-column="16" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -998,19 +975,85 @@
         <state relative-caret-position="663">
           <caret line="49" column="29" selection-start-line="49" selection-start-column="29" selection-end-line="49" selection-end-column="29" />
           <folding>
-            <element signature="e#441#442#0" expanded="true" />
-            <element signature="e#471#472#0" expanded="true" />
+            <element signature="e#441#442#0" expanded="false" />
+            <element signature="e#471#472#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/model/ImageManager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-981">
-          <caret line="237" column="2" selection-start-line="237" selection-start-column="2" selection-end-line="237" selection-end-column="2" />
+        <state relative-caret-position="-284">
+          <caret line="284" column="38" selection-start-line="284" selection-start-column="38" selection-end-line="284" selection-end-column="38" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/view/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="28" column="35" selection-start-line="28" selection-start-column="35" selection-end-line="28" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../ati-backend/src/com/goodengineer/atibackend/transformation/filter/MultiFilterTransformation.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="15" column="35" selection-start-line="15" selection-start-column="35" selection-end-line="15" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/view/CustomInputTextDialog.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="222">
+          <caret line="65" column="0" selection-start-line="65" selection-start-column="0" selection-end-line="65" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../ati-backend/src/com/goodengineer/atibackend/util/MaskFactory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="53" column="32" selection-start-line="53" selection-start-column="29" selection-end-line="53" selection-end-column="32" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/view/ToolbarButton.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="122">
+          <caret line="13" column="2" selection-start-line="13" selection-start-column="2" selection-end-line="13" selection-end-column="2" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/view/ToolbarPanel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="173">
+          <caret line="80" column="45" selection-start-line="80" selection-start-column="45" selection-end-line="80" selection-end-column="45" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/util/ToolbarImages.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="186">
+          <caret line="43" column="31" selection-start-line="43" selection-start-column="31" selection-end-line="43" selection-end-column="31" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/view/ViewConstants.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="332">
+          <caret line="21" column="46" selection-start-line="21" selection-start-column="46" selection-end-line="21" selection-end-column="46" />
+          <folding />
         </state>
       </provider>
     </entry>

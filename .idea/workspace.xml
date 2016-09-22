@@ -1,15 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="fbbd8f4a-cf77-4a17-a4a4-3851dd327797" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/filter_hipass.png" afterPath="$PROJECT_DIR$/resources/filter_hipass.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/util/ToolbarImages.java" afterPath="$PROJECT_DIR$/src/main/java/util/ToolbarImages.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/view/ToolbarPanel.java" afterPath="$PROJECT_DIR$/src/main/java/view/ToolbarPanel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/view/ViewConstants.java" afterPath="$PROJECT_DIR$/src/main/java/view/ViewConstants.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ati-backend/src/com/goodengineer/atibackend/transformation/ConstrastTransformation.java" afterPath="$PROJECT_DIR$/../ati-backend/src/com/goodengineer/atibackend/transformation/ConstrastTransformation.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ati-backend/src/com/goodengineer/atibackend/transformation/filter/MultiFilterTransformation.java" afterPath="$PROJECT_DIR$/../ati-backend/src/com/goodengineer/atibackend/transformation/filter/MultiFilterTransformation.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ati-backend/src/com/goodengineer/atibackend/util/MaskFactory.java" afterPath="$PROJECT_DIR$/../ati-backend/src/com/goodengineer/atibackend/util/MaskFactory.java" />
-    </list>
+    <list default="true" id="fbbd8f4a-cf77-4a17-a4a4-3851dd327797" name="Default" comment="" />
     <ignored path="ATI-GUI-Desktop.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/out/" />
@@ -38,8 +30,8 @@
       <file leaf-file-name="ViewConstants.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/view/ViewConstants.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="332">
-              <caret line="21" column="46" selection-start-line="21" selection-start-column="46" selection-end-line="21" selection-end-column="46" />
+            <state relative-caret-position="128">
+              <caret line="12" column="48" selection-start-line="12" selection-start-column="48" selection-end-line="12" selection-end-column="48" />
               <folding />
             </state>
           </provider>
@@ -90,8 +82,8 @@
       <file leaf-file-name="MaskFactory.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../ati-backend/src/com/goodengineer/atibackend/util/MaskFactory.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="170">
-              <caret line="53" column="32" selection-start-line="53" selection-start-column="29" selection-end-line="53" selection-end-column="32" />
+            <state relative-caret-position="-8">
+              <caret line="53" column="30" selection-start-line="53" selection-start-column="27" selection-end-line="53" selection-end-column="30" />
               <folding />
             </state>
           </provider>
@@ -1017,8 +1009,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/../ati-backend/src/com/goodengineer/atibackend/util/MaskFactory.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="53" column="32" selection-start-line="53" selection-start-column="29" selection-end-line="53" selection-end-column="32" />
+        <state relative-caret-position="-8">
+          <caret line="53" column="30" selection-start-line="53" selection-start-column="27" selection-end-line="53" selection-end-column="30" />
           <folding />
         </state>
       </provider>
@@ -1051,8 +1043,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/view/ViewConstants.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="332">
-          <caret line="21" column="46" selection-start-line="21" selection-start-column="46" selection-end-line="21" selection-end-column="46" />
+        <state relative-caret-position="128">
+          <caret line="12" column="48" selection-start-line="12" selection-start-column="48" selection-end-line="12" selection-end-column="48" />
           <folding />
         </state>
       </provider>

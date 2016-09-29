@@ -25,7 +25,7 @@ public class BufferedImageColorImageTranslator implements ColorImageTranslator<B
       }
     }
 
-    return new ColorImage(new Band(red), new Band(green), new Band(blue));
+    return new ColorImage(new Band(red, "R"), new Band(green, "G"), new Band(blue, "B"));
   }
 
   @Override

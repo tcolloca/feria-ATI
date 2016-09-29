@@ -24,18 +24,18 @@ public final class ToolbarImages {
   public static final ImageView NOISE_EXP = getImage("noise_exp.png");
   public static final ImageView NOISE_RAYLEIGH = getImage("noise_rayleigh.png");
   public static final ImageView NOISE_SALT_AND_PEPPER = getImage("noise_salt_and_pepper.png");
-  public static final ImageView FILTER_AVERAGE = getImage("filter_average.png");
+  public static final ImageView FILTER_AVERAGE = getImage("filter_avg.png");
   public static final ImageView FILTER_MEDIAN = getImage("filter_median.png");
   public static final ImageView FILTER_GAUSS = getImage("filter_gauss.png");
   public static final ImageView FILTER_HIPASS = getImage("filter_hipass.png");
   public static final ImageView FILTER_SOBEL = getImage("filter_sobel.png");
   public static final ImageView FILTER_PREWITT = getImage("filter_prewitt.png");
   public static final ImageView FILTER_KIRSH = getImage("filter_kirsh.png");
-  public static final ImageView FILTER_A = getImage("filter_a.png");
+  public static final ImageView FILTER_A = getImage("filter_itema.png");
   public static final ImageView FILTER_LAPLACE = getImage("filter_laplace.png");
   public static final ImageView FILTER_LOG = getImage("filter_log.png");
-  public static final ImageView FILTER_ISOTROPIC = getImage("filter_isotropic.png");
-  public static final ImageView FILTER_ANISOTROPIC = getImage("filter_anisotropic.png");
+  public static final ImageView FILTER_ISOTROPIC = getImage("filter_iso.png");
+  public static final ImageView FILTER_ANISOTROPIC = getImage("filter_aniso.png");
 
   private static ImageView getImage(String name) {
     try {

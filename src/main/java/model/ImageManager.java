@@ -199,6 +199,23 @@ public class ImageManager {
     imagePanel.showModified();
   }
 
+  public void getValueBand() {
+    int width = originalImage.getWidth();
+    BufferedImage buffOriginalImage = translator.translateBackward(originalImage);
+    BufferedImage buffModifiableImage = new BufferedImage(width, originalImage.getHeight(),
+        BufferedImage.TYPE_INT_RGB);
+
+    for (int w = 0; w < originalImage.getWidth(); w++) {
+      for (int h = 0; h < originalImage.getHeight(); h++) {
+        float[] hsv = ColorHelper.getHSV(buffOriginalImage.getRGB(w, h));
+        buffModifiableImage.setRGB(w, h, ColorHelper.getGrayInRgb(hsv[2]));
+      }
+    }
+    modifiableImage = translator.translateForward(buffModifiableImage);
+
+    imagePanel.showModified();
+  }
+
   public BufferedImage getCircleImage() {
     BufferedImage img = new BufferedImage(200, 200, BufferedImage.TYPE_BYTE_BINARY);
     for (int x = 0; x < 200; x++) {

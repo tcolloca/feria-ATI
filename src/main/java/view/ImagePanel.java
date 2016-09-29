@@ -12,9 +12,12 @@ import javafx.scene.layout.RowConstraints;
 import model.ImageManager;
 import util.ImageEventAdapter;
 
+import static view.ViewConstants.TOOLBAR_SPACING;
+
 public class ImagePanel extends ImageEventAdapter {
 
   private final GridPane gridPane = new GridPane();
+  private final ImageView originalImageView;
   private final ImageView imageView;
 
   private final Group imageLayer;
@@ -25,6 +28,7 @@ public class ImagePanel extends ImageEventAdapter {
   ImagePanel(ImageManager imageManager) {
     this.imageManager = imageManager;
 
+    originalImageView = new ImageView();
     imageView = new ImageView();
 
     ColumnConstraints col1 = new ColumnConstraints();
@@ -36,16 +40,27 @@ public class ImagePanel extends ImageEventAdapter {
     gridPane.getRowConstraints().add(row1);
 
     HBox imageBox = new HBox();
+    imageBox.setSpacing(5);
     imageBox.setAlignment(Pos.CENTER);
     imageBox.setStyle("-fx-background-color: #9BD;");
     imageLayer = new Group();
     imageLayer.getChildren().add(imageView);
+    imageBox.getChildren().add(originalImageView);
     imageBox.getChildren().add(imageLayer);
     rubberBandSelection = new RubberBandSelection(imageLayer, imageManager);
 
     gridPane.add(imageBox, 0, 0);
+    imageView.setPreserveRatio(true);
+    imageView.maxHeight(imageBox.widthProperty().doubleValue());
+    imageView.maxWidth(imageBox.heightProperty().doubleValue() / 2);
+//    imageView.fitWidthProperty().bind(imageBox.widthProperty());
+//    imageView.fitHeightProperty().bind(imageBox.heightProperty());
 
     imageManager.setImagePanel(this);
+
+    originalImageView.setPreserveRatio(true);
+    originalImageView.maxHeight(imageBox.widthProperty().doubleValue());
+    originalImageView.maxWidth(imageBox.heightProperty().doubleValue()/2);
   }
 
   public void crop() {
@@ -61,11 +76,13 @@ public class ImagePanel extends ImageEventAdapter {
   }
 
   public void showModified() {
+    originalImageView.setImage(imageManager.getOriginalImage());
     imageView.setImage(imageManager.getModifiableImage());
     imageView.setStyle("-fx-border-color: #FFF;");
   }
 
   public void showOriginal() {
+    originalImageView.setImage(imageManager.getOriginalImage());
     imageView.setImage(imageManager.getOriginalImage());
   }
 

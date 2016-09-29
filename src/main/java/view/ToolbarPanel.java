@@ -6,17 +6,22 @@ import com.goodengineer.atibackend.transformation.filter.FilterAndZeroCrossTrans
 import com.goodengineer.atibackend.transformation.filter.FilterTransformation;
 import com.goodengineer.atibackend.transformation.filter.MedianFilterTransformation;
 import com.goodengineer.atibackend.transformation.filter.MultiFilterTransformation;
+import com.goodengineer.atibackend.transformation.filter.difusion.*;
 import com.goodengineer.atibackend.transformation.filter.pixelRules.MaxPixelRule;
 import com.goodengineer.atibackend.transformation.filter.pixelRules.NormPixelRule;
 import com.goodengineer.atibackend.transformation.noise.ExponentialNoiseTransformation;
 import com.goodengineer.atibackend.transformation.noise.GaussNoiseTransformation;
 import com.goodengineer.atibackend.transformation.noise.RayleighNoiseTransformation;
 import com.goodengineer.atibackend.transformation.noise.SaltAndPepperNoiseTransformation;
+import com.goodengineer.atibackend.transformation.threshold.GlobalThresholdingTransformation;
+import com.goodengineer.atibackend.transformation.threshold.OtsuThresholdingTransformation;
+import com.goodengineer.atibackend.transformation.threshold.ThresholdingTransformation;
 import com.goodengineer.atibackend.util.MaskFactory.Direction;
 import com.goodengineer.atibackend.util.MaskFactory;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import model.ImageManager;
 import sun.rmi.runtime.Log;
 import util.BufferedImageColorImageTranslator;
@@ -35,6 +40,8 @@ import static view.ViewConstants.TOOLBAR_SPACING;
 public class ToolbarPanel {
 
   private final HBox hBox = new HBox();
+  private final HBox hFiltersBox = new HBox();
+  private final VBox vBox = new VBox();
   private final ImageManager imageManager;
 
   ToolbarPanel(ImageManager imageManager) {
@@ -48,6 +55,8 @@ public class ToolbarPanel {
     hBox.getChildren().addAll(
         negativeButton(),
         thresholdButton(),
+        thresholdGlobalButton(),
+        thresholdOtsuButton(),
         contrastButton(),
         dynamicRangeButton(),
         equalizeButton(),
@@ -59,17 +68,29 @@ public class ToolbarPanel {
         gaussNoiseButton(),
         expNoiseButton(),
         rayleighNoiseButton(),
-        saltAndPepperNoiseButton(),
+        saltAndPepperNoiseButton());
+
+    hFiltersBox.setSpacing(TOOLBAR_SPACING);
+    hFiltersBox.setAlignment(Pos.CENTER);
+    hFiltersBox.setStyle("-fx-background-color: #DDD;");
+    hFiltersBox.setVisible(true);
+
+    hFiltersBox.getChildren().addAll(
         averageFilterButton(),
         medianFilterButton(),
         gaussianFilterButton(),
         hipassFilterButton(),
         sobelFilterButton(),
+        prewittFilterButton(),
         kirshFilterButton(),
         itemAFilterButton(),
         laplaceFilterButton(),
         LoGFilterButton(),
-        isotropicFilterButton());
+        isotropicFilterButton(),
+        anisotropicFilterButton());
+
+    vBox.getChildren().add(hBox);
+    vBox.getChildren().add(hFiltersBox);
   }
 
   private Node negativeButton() {
@@ -86,6 +107,24 @@ public class ToolbarPanel {
           int threshold = dialog.getResult(0, Integer.class);
           imageManager.applyTransformation(new ThresholdingTransformation(threshold));
         }).getNode();
+  }
+
+  private Node thresholdGlobalButton() {
+    return new ToolbarButton("Global Threshold", ToolbarImages.THRESHOLD_GLOBAL,
+            actionEvent -> {
+              CustomInputTextDialog dialog = new CustomInputTextDialog("Global Threshold", Arrays.asList(
+                  new Field("Delta threshold:", "5")));
+              dialog.show();
+              int dt = dialog.getResult(0, Integer.class);
+              imageManager.applyTransformation(new GlobalThresholdingTransformation(dt));
+            })
+        .getNode();
+  }
+
+  private Node thresholdOtsuButton() {
+    return new ToolbarButton("Otsu Threshold", ToolbarImages.THRESHOLD_OTSU,
+        actionEvent -> imageManager.applyTransformation(new OtsuThresholdingTransformation()))
+        .getNode();
   }
 
   private Node contrastButton() {
@@ -432,17 +471,30 @@ public class ToolbarPanel {
     return new ToolbarButton("Isotropic Diffusion", ToolbarImages.FILTER_ISOTROPIC,
         actionEvent -> {
           CustomInputTextDialog dialog = new CustomInputTextDialog("Isotropic Diffusion", Arrays.asList(
-              new Field("Size:", "5"),
-              new Field("Sigma:", "1.5")));
+              new Field("t:", "1")));
           dialog.show();
-          int size = dialog.getResult(0, Integer.class);
-          double sigma = dialog.getResult(0, Double.class);
-          imageManager.applyTransformation(
-              new FilterTransformation(MaskFactory.isotropic(size, sigma)));
+          int t = dialog.getResult(0, Integer.class);
+          imageManager.applyTransformation(new DifusionTransformation(t, new IsotropicBorderDetector()));
+        }).getNode();
+  }
+
+  private Node anisotropicFilterButton() {
+    return new ToolbarButton("Anistropic Diffusion", ToolbarImages.FILTER_ANISOTROPIC,
+        actionEvent -> {
+          CustomInputTextDialog dialog = new CustomInputTextDialog("Anisotropic Diffusion", Arrays.asList(
+              new Field("t:", "5"),
+              new Field("sigma:", "3.5"),
+              new Field("Lorentzian or Leclerc:", "lo/le")));
+          dialog.show();
+          int t = dialog.getResult(0, Integer.class);
+          double sigma = dialog.getResult(1, Double.class);
+          BorderDetector borderDetector = dialog.getResult(2, String.class) == "lo" ?
+              new LorentzianBorderDetector(sigma) : new LeclercBorderDetector(sigma);
+          imageManager.applyTransformation(new DifusionTransformation(t, borderDetector));
         }).getNode();
   }
 
   public Node getNode() {
-    return hBox;
+    return vBox;
   }
 }

@@ -18,7 +18,8 @@ public class EditMenu {
         undoImageMenuItem(),
         cropImageMenuItem(),
         decomposeRgbMenuItem(),
-        decomposeHsvMenuItem());
+        decomposeHsvMenuItem(),
+        toBAndWMenuItem());
   }
 
   private MenuItem undoImageMenuItem() {
@@ -44,6 +45,12 @@ public class EditMenu {
   private MenuItem decomposeHsvMenuItem() {
     MenuItem menuItem = new MenuItem("Decompose HSV");
     menuItem.setOnAction((actionEvent) -> imageManager.decomposeHsv());
+    return menuItem;
+  }
+
+  private MenuItem toBAndWMenuItem() {
+    MenuItem menuItem = new MenuItem("Convert to B&W");
+    menuItem.setOnAction((actionEvent) -> imageManager.getValueBand());
     return menuItem;
   }
 

@@ -66,7 +66,8 @@ public class ImageManager {
       // TODO: Auto-generated code.
       e.printStackTrace();
     }
-    imagePanel.showModified();
+    imagePanel.showOriginal();
+//    imagePanel.showModified();
   }
 
   public void applyTransformation(Transformation transformation) {

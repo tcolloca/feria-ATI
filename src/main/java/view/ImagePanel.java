@@ -12,8 +12,6 @@ import javafx.scene.layout.RowConstraints;
 import model.ImageManager;
 import util.ImageEventAdapter;
 
-import static view.ViewConstants.TOOLBAR_SPACING;
-
 public class ImagePanel extends ImageEventAdapter {
 
   private final GridPane gridPane = new GridPane();
@@ -83,7 +81,7 @@ public class ImagePanel extends ImageEventAdapter {
 
   public void showOriginal() {
     originalImageView.setImage(imageManager.getOriginalImage());
-    imageView.setImage(imageManager.getOriginalImage());
+//    imageView.setImage(imageManager.getOriginalImage());
   }
 
   Node getNode() {

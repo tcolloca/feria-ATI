@@ -7,6 +7,7 @@ import model.ImageManager;
 import util.FileHelper;
 
 import java.io.File;
+import java.util.Arrays;
 
 public class FileMenu {
 
@@ -18,6 +19,7 @@ public class FileMenu {
     fileMenu.setMnemonicParsing(true);
     fileMenu.getItems().addAll(
         openImageMenuItem(),
+        openSarImageMenuItem(),
         saveImageMenuItem(),
         createCircleImageMenuItem(),
         createRectangleImageMenuItem(),
@@ -30,6 +32,26 @@ public class FileMenu {
     menuItem.setOnAction((actionEvent) -> {
           File imageFile = FileHelper.loadImageFile();
           imageManager.setImageFile(imageFile);
+        }
+    );
+    return menuItem;
+  }
+
+  private MenuItem openSarImageMenuItem() {
+    MenuItem menuItem = new MenuItem("Open SAR Image...");
+    menuItem.setAccelerator(KeyCombination.keyCombination("SHORTCUT+A"));
+    menuItem.setOnAction((actionEvent) -> {
+          CustomInputTextDialog dialog = new CustomInputTextDialog("SAR Image Options",
+              Arrays.asList(
+                  new Field("Reducer width: ", "2"),
+                  new Field("Reducer height: ", "2"),
+                  new Field("Reducer type: ", "avg|med|int")));
+          dialog.show();
+          int reducerWidth = dialog.getResult(0, Integer.class);
+          int reducerHeight = dialog.getResult(1, Integer.class);
+          String type = dialog.getResult(2, String.class);
+          File imageFile = FileHelper.loadImageFile();
+          imageManager.setSarImageFile(imageFile, reducerWidth, reducerHeight, type);
         }
     );
     return menuItem;

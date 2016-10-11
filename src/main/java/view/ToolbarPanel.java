@@ -9,6 +9,8 @@ import com.goodengineer.atibackend.transformation.filter.MultiFilterTransformati
 import com.goodengineer.atibackend.transformation.filter.difusion.*;
 import com.goodengineer.atibackend.transformation.filter.pixelRules.MaxPixelRule;
 import com.goodengineer.atibackend.transformation.filter.pixelRules.NormPixelRule;
+import com.goodengineer.atibackend.transformation.flip.HorizontalFlipTransformation;
+import com.goodengineer.atibackend.transformation.flip.VerticalFlipTransformation;
 import com.goodengineer.atibackend.transformation.noise.ExponentialNoiseTransformation;
 import com.goodengineer.atibackend.transformation.noise.GaussNoiseTransformation;
 import com.goodengineer.atibackend.transformation.noise.RayleighNoiseTransformation;
@@ -16,14 +18,13 @@ import com.goodengineer.atibackend.transformation.noise.SaltAndPepperNoiseTransf
 import com.goodengineer.atibackend.transformation.threshold.GlobalThresholdingTransformation;
 import com.goodengineer.atibackend.transformation.threshold.OtsuThresholdingTransformation;
 import com.goodengineer.atibackend.transformation.threshold.ThresholdingTransformation;
-import com.goodengineer.atibackend.util.MaskFactory.Direction;
 import com.goodengineer.atibackend.util.MaskFactory;
+import com.goodengineer.atibackend.util.MaskFactory.Direction;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import model.ImageManager;
-import sun.rmi.runtime.Log;
 import util.BufferedImageColorImageTranslator;
 import util.FileHelper;
 import util.ToolbarImages;
@@ -65,6 +66,8 @@ public class ToolbarPanel {
         multiplyButton(),
         scalarButton(),
         powerButton(),
+        horizontalFlipButton(),
+        verticalFlipButton(),
         gaussNoiseButton(),
         expNoiseButton(),
         rayleighNoiseButton(),
@@ -244,6 +247,20 @@ public class ToolbarPanel {
           dialog.show();
           double gamma = dialog.getResult(0, Double.class);
           imageManager.applyTransformation(new PowerTransformation(gamma));
+        }).getNode();
+  }
+
+  private Node horizontalFlipButton() {
+    return new ToolbarButton("Horizontal Flip", ToolbarImages.FLIP_H,
+        actionEvent -> {
+          imageManager.applyTransformation(new HorizontalFlipTransformation());
+        }).getNode();
+  }
+
+  private Node verticalFlipButton() {
+    return new ToolbarButton("Vertical Flip", ToolbarImages.FLIP_V,
+        actionEvent -> {
+          imageManager.applyTransformation(new VerticalFlipTransformation());
         }).getNode();
   }
 

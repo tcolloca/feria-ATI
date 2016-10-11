@@ -47,19 +47,30 @@ public class ImageManager {
     try {
       String fileName = imageFile.getAbsolutePath();
       if (fileName.endsWith(".flt") || fileName.endsWith(".img")) {
-        originalImage = readSarImage(imageFile);
+        setSarImageFile(imageFile, 1, 1, "");
       } else {
         BufferedImage bufferedImage = ImageIO.read(imageFile);
         originalImage = translator.translateForward(bufferedImage);
+        modifiableImage = (ColorImage) originalImage.clone();
+        transformations.clear();
+        imagePanel.showOriginal();
       }
-      modifiableImage = (ColorImage) originalImage.clone();
-      transformations.clear();
     } catch (IOException e) {
       // TODO: Auto-generated code.
       e.printStackTrace();
     }
-    imagePanel.showOriginal();
-//    imagePanel.showModified();
+  }
+  
+  public void setSarImageFile(File imageFile, int reducerWidth, int reducerHeight, String type) {
+    try {
+      originalImage = readSarImage(imageFile, reducerWidth, reducerHeight, type);
+      modifiableImage = (ColorImage) originalImage.clone();
+      transformations.clear();
+      imagePanel.showOriginal();
+    } catch (IOException e) {
+      // TODO: Auto-generated code.
+      e.printStackTrace();
+    }
   }
 
   public void applyTransformation(Transformation transformation) {

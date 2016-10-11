@@ -3,13 +3,7 @@ package util.pf;
 import com.goodengineer.atibackend.model.Band;
 import com.goodengineer.atibackend.util.Function;
 import com.goodengineer.atibackend.util.LinearFunction;
-import com.google.common.io.Files;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,47 +49,11 @@ public class SarBand extends Band {
     }
   }
 
-  public static int[][] readFlt(File file) throws IOException {
-    byte[] bytes;
-    bytes = Files.toByteArray(file);
-    double min = Double.POSITIVE_INFINITY;
-    double max = Double.NEGATIVE_INFINITY;
-    PrintWriter writer = new PrintWriter("sar.csv", "UTF-8");
-    double[][] m = new double[459][494];
-    for (int l = 0; l < 459; l++) {
-      for (int s = 0; s < 494; s++) {
-        byte[] floatBytes = new byte[4];
-        for (int b = 0; b < 4; b++) {
-          floatBytes[b] = bytes[l * 494 * 4 + s * 4 + b];
-        }
-        float f = ByteBuffer.wrap(floatBytes).order(ByteOrder.BIG_ENDIAN).getFloat();
-        if (f < min) {
-          min = f;
-        }
-        if (f > max) {
-          max = f;
-        }
-        m[l][s] = f;
-        writer.println(f);
-      }
-    }
-    writer.close();
-    Function<Double, Double> normFunction = new LinearFunction(min, 0.0, max, 255.0);
-    double[][] newM = equalize(m, min, max);
-    int[][] normM = new int[459][494];
-    for (int i = 0; i < m.length; i++) {
-      for (int j = 0; j < m[0].length; j++) {
-        normM[i][j] = (int) Math.round(normFunction.apply(newM[i][j]));
-      }
-    }
-    return normM;
-  }
-
   public static double[][] equalize(double[][] m, double min, double max) {
     double[][] newM = new double[m.length][m[0].length];
-    int BUCKETS = m.length * m[0].length;
-    double bucketSize = (max - min) / (BUCKETS  - 1);
-    double[] histogram = new double[BUCKETS];
+    int buckets = m.length * m[0].length;
+    double bucketSize = (max - min) / (buckets  - 1);
+    double[] histogram = new double[buckets];
     int count = 0;
 
     for (int i = 0; i < m.length; i++) {
@@ -109,12 +67,12 @@ public class SarBand extends Band {
       histogram[i] = histogram[i]/count;
     }
 
-    double[] relativeAcum = new double[BUCKETS];
+    double[] relativeAcum = new double[buckets];
     relativeAcum[0] = histogram[0];
     for (int i = 1; i < histogram.length; i++) {
       relativeAcum[i] = histogram[i] + relativeAcum[i - 1];
     }
-    relativeAcum[BUCKETS - 1] = 1;
+    relativeAcum[buckets - 1] = 1;
 
     double fMin = relativeAcum[0];
     for (int i = 0; i < m.length; i++) {
@@ -123,7 +81,7 @@ public class SarBand extends Band {
       }
     }
 
-    histogram = new double[BUCKETS];
+    histogram = new double[buckets];
     for (int i = 0; i < m.length; i++) {
       for (int j = 0; j < m[0].length; j++) {
         histogram[getBucket(newM[i][j], min, bucketSize)]++;
@@ -138,9 +96,6 @@ public class SarBand extends Band {
   }
 
   public static int getBucket(double f, double min, double bucketSize) {
-    if ((int) Math.floor((f - min) / bucketSize) == 226751) {
-      System.out.println("invalid: " + f);
-    }
     return (int) Math.floor((f - min) / bucketSize);
   }
 

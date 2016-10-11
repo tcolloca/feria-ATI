@@ -20,6 +20,8 @@ public final class ToolbarImages {
   public static final ImageView MULTIPLY = getImage("multiply.png");
   public static final ImageView SCALAR = getImage("scalar.png");
   public static final ImageView POWER = getImage("pow.png");
+  public static final ImageView FLIP_H = getImage("flip_h.png");
+  public static final ImageView FLIP_V = getImage("flip_v.png");
   public static final ImageView NOISE_GAUSS = getImage("noise_gauss.png");
   public static final ImageView NOISE_EXP = getImage("noise_exp.png");
   public static final ImageView NOISE_RAYLEIGH = getImage("noise_rayleigh.png");

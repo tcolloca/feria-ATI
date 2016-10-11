@@ -23,6 +23,9 @@ public class ImagePanel extends ImageEventAdapter {
 
   private final ImageManager imageManager;
 
+  private final double maxWidth = ViewConstants.MAIN_MIN_WIDTH - 50;
+  private final double maxHeight = ViewConstants.IMAGE_MIN_HEIGHT - 20;
+
   ImagePanel(ImageManager imageManager) {
     this.imageManager = imageManager;
 
@@ -48,17 +51,12 @@ public class ImagePanel extends ImageEventAdapter {
     rubberBandSelection = new RubberBandSelection(imageLayer, imageManager);
 
     gridPane.add(imageBox, 0, 0);
+
     imageView.setPreserveRatio(true);
-    imageView.maxHeight(imageBox.widthProperty().doubleValue());
-    imageView.maxWidth(imageBox.heightProperty().doubleValue() / 2);
-//    imageView.fitWidthProperty().bind(imageBox.widthProperty());
-//    imageView.fitHeightProperty().bind(imageBox.heightProperty());
+    originalImageView.setPreserveRatio(true);
 
     imageManager.setImagePanel(this);
 
-    originalImageView.setPreserveRatio(true);
-    originalImageView.maxHeight(imageBox.widthProperty().doubleValue());
-    originalImageView.maxWidth(imageBox.heightProperty().doubleValue()/2);
   }
 
   public void crop() {
@@ -75,13 +73,28 @@ public class ImagePanel extends ImageEventAdapter {
 
   public void showModified() {
     originalImageView.setImage(imageManager.getOriginalImage());
+    imageView.setFitHeight(0);
+    imageView.setFitWidth(0);
     imageView.setImage(imageManager.getModifiableImage());
     imageView.setStyle("-fx-border-color: #FFF;");
+    double width = imageView.getBoundsInLocal().getMaxX();
+    double height = imageView.getBoundsInLocal().getMaxX();
+    if (width > maxWidth || height > maxHeight) {
+      imageView.setFitHeight(maxHeight);
+      imageView.setFitWidth(maxWidth);
+    }
   }
 
   public void showOriginal() {
     originalImageView.setImage(imageManager.getOriginalImage());
-//    imageView.setImage(imageManager.getOriginalImage());
+    originalImageView.setFitHeight(0);
+    originalImageView.setFitWidth(0);
+    double width = originalImageView.getBoundsInLocal().getMaxX();
+    double height = originalImageView.getBoundsInLocal().getMaxX();
+    if (width > maxWidth || height > maxHeight) {
+      originalImageView.setFitHeight(maxHeight);
+      originalImageView.setFitWidth(maxWidth);
+    }
   }
 
   Node getNode() {

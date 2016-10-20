@@ -11,6 +11,7 @@ import com.goodengineer.atibackend.transformation.filter.pixelRules.MaxPixelRule
 import com.goodengineer.atibackend.transformation.filter.pixelRules.NormPixelRule;
 import com.goodengineer.atibackend.transformation.flip.HorizontalFlipTransformation;
 import com.goodengineer.atibackend.transformation.flip.VerticalFlipTransformation;
+import com.goodengineer.atibackend.transformation.key_points.HarrisTransformation;
 import com.goodengineer.atibackend.transformation.noise.ExponentialNoiseTransformation;
 import com.goodengineer.atibackend.transformation.noise.GaussNoiseTransformation;
 import com.goodengineer.atibackend.transformation.noise.RayleighNoiseTransformation;
@@ -90,7 +91,8 @@ public class ToolbarPanel {
         laplaceFilterButton(),
         LoGFilterButton(),
         isotropicFilterButton(),
-        anisotropicFilterButton());
+        anisotropicFilterButton(),
+        harrisKeypointsButton());
 
     vBox.getChildren().add(hBox);
     vBox.getChildren().add(hFiltersBox);
@@ -508,6 +510,17 @@ public class ToolbarPanel {
           BorderDetector borderDetector = dialog.getResult(2, String.class) == "lo" ?
               new LorentzianBorderDetector(sigma) : new LeclercBorderDetector(sigma);
           imageManager.applyTransformation(new DifusionTransformation(t, borderDetector));
+        }).getNode();
+  }
+
+  private Node harrisKeypointsButton() {
+    return new ToolbarButton("Harris Keypoints", ToolbarImages.KEYPOINT,
+        actionEvent -> {
+          CustomInputTextDialog dialog = new CustomInputTextDialog("Harris Keypoints", Arrays.asList(
+              new Field("Threshold (Percentage of Maximum):", "50")));
+          dialog.show();
+          int percentage = dialog.getResult(0, Integer.class);
+          imageManager.applyTransformation(new HarrisTransformation(percentage));
         }).getNode();
   }
 

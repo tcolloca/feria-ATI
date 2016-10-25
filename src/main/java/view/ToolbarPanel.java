@@ -11,6 +11,8 @@ import com.goodengineer.atibackend.transformation.filter.pixelRules.MaxPixelRule
 import com.goodengineer.atibackend.transformation.filter.pixelRules.NormPixelRule;
 import com.goodengineer.atibackend.transformation.flip.HorizontalFlipTransformation;
 import com.goodengineer.atibackend.transformation.flip.VerticalFlipTransformation;
+import com.goodengineer.atibackend.transformation.key_points.HarrisTransformation;
+import com.goodengineer.atibackend.transformation.key_points.SusanTransformation;
 import com.goodengineer.atibackend.transformation.noise.ExponentialNoiseTransformation;
 import com.goodengineer.atibackend.transformation.noise.GaussNoiseTransformation;
 import com.goodengineer.atibackend.transformation.noise.RayleighNoiseTransformation;
@@ -90,7 +92,9 @@ public class ToolbarPanel {
         laplaceFilterButton(),
         LoGFilterButton(),
         isotropicFilterButton(),
-        anisotropicFilterButton());
+        anisotropicFilterButton(),
+        harrisKeypointsButton(),
+        susanKeypointsButton());
 
     vBox.getChildren().add(hBox);
     vBox.getChildren().add(hFiltersBox);
@@ -510,6 +514,30 @@ public class ToolbarPanel {
           imageManager.applyTransformation(new DifusionTransformation(t, borderDetector));
         }).getNode();
   }
+
+  private Node harrisKeypointsButton() {
+    return new ToolbarButton("Harris Keypoints", ToolbarImages.KEYPOINT,
+        actionEvent -> {
+          CustomInputTextDialog dialog = new CustomInputTextDialog("Harris Keypoints", Arrays.asList(
+              new Field("Threshold (Percentage of Maximum):", "50.0")));
+          dialog.show();
+          double percentage = dialog.getResult(0, Double.class);
+          imageManager.applyTransformation(new HarrisTransformation(percentage));
+        }).getNode();
+  }
+
+    private Node susanKeypointsButton() {
+        return new ToolbarButton("Susan Keypoints", ToolbarImages.KEYPOINT_SUSAN,
+                actionEvent -> {
+                    CustomInputTextDialog dialog = new CustomInputTextDialog("Susan Keypoints", Arrays.asList(
+                            new Field("Threshold:", "5"),
+                            new Field("Corner limit:", "0.75")));
+                    dialog.show();
+                    int threshold = dialog.getResult(0, Integer.class);
+                    double cornerLimit = dialog.getResult(1, Double.class);
+                    imageManager.applyTransformation(new SusanTransformation(threshold, cornerLimit));
+                }).getNode();
+    }
 
   public Node getNode() {
     return vBox;

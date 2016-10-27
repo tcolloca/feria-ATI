@@ -1,17 +1,28 @@
 package view;
 
+import static view.ViewConstants.IMAGE_MIN_HEIGHT;
+import static view.ViewConstants.INFO_MIN_HEIGHT;
+import static view.ViewConstants.MAIN_MIN_HEIGHT;
+import static view.ViewConstants.MAIN_MIN_WIDTH;
+import static view.ViewConstants.TOOLBAR_MIN_HEIGHT;
+import static view.ViewConstants.WINDOW_TITLE;
+
+import java.io.IOException;
+
 import javafx.application.Application;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
-import javafx.scene.layout.*;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import model.ImageManager;
 
-import java.io.IOException;
-
-import static view.ViewConstants.*;
+import org.opencv.core.Core;
 
 public class Main extends Application {
 
@@ -19,9 +30,10 @@ public class Main extends Application {
   private ImagePanel imagePanel;
 
   public static void main(String[] args) throws IOException {
+	System.loadLibrary( Core.NATIVE_LIBRARY_NAME );
     Application.launch(args);
   }
-
+  
   @Override
   public void start(Stage stage) throws Exception {
     stage.setTitle(WINDOW_TITLE);

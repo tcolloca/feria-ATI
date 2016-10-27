@@ -1,12 +1,45 @@
 package view;
 
+import static view.ViewConstants.TOOLBAR_SPACING;
+
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+
+import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+
+import javax.imageio.ImageIO;
+
+import model.ImageManager;
+import util.BufferedImageColorImageTranslator;
+import util.FileHelper;
+import util.SiftMatcher;
+import util.ToolbarImages;
+
 import com.goodengineer.atibackend.model.ColorImage;
-import com.goodengineer.atibackend.transformation.*;
+import com.goodengineer.atibackend.transformation.ConstrastTransformation;
+import com.goodengineer.atibackend.transformation.DynamicRangeCompressionTransformation;
+import com.goodengineer.atibackend.transformation.EqualizationTransformation;
+import com.goodengineer.atibackend.transformation.MultiplyImageTransformation;
+import com.goodengineer.atibackend.transformation.NegativeTransformation;
+import com.goodengineer.atibackend.transformation.PowerTransformation;
+import com.goodengineer.atibackend.transformation.ScaleTransformation;
+import com.goodengineer.atibackend.transformation.SubstractImageTransformation;
+import com.goodengineer.atibackend.transformation.SumImageTransformation;
 import com.goodengineer.atibackend.transformation.filter.FilterAndZeroCrossTransformation;
 import com.goodengineer.atibackend.transformation.filter.FilterTransformation;
 import com.goodengineer.atibackend.transformation.filter.MedianFilterTransformation;
 import com.goodengineer.atibackend.transformation.filter.MultiFilterTransformation;
-import com.goodengineer.atibackend.transformation.filter.difusion.*;
+import com.goodengineer.atibackend.transformation.filter.difusion.BorderDetector;
+import com.goodengineer.atibackend.transformation.filter.difusion.DifusionTransformation;
+import com.goodengineer.atibackend.transformation.filter.difusion.IsotropicBorderDetector;
+import com.goodengineer.atibackend.transformation.filter.difusion.LeclercBorderDetector;
+import com.goodengineer.atibackend.transformation.filter.difusion.LorentzianBorderDetector;
 import com.goodengineer.atibackend.transformation.filter.pixelRules.MaxPixelRule;
 import com.goodengineer.atibackend.transformation.filter.pixelRules.NormPixelRule;
 import com.goodengineer.atibackend.transformation.flip.HorizontalFlipTransformation;
@@ -22,23 +55,6 @@ import com.goodengineer.atibackend.transformation.threshold.OtsuThresholdingTran
 import com.goodengineer.atibackend.transformation.threshold.ThresholdingTransformation;
 import com.goodengineer.atibackend.util.MaskFactory;
 import com.goodengineer.atibackend.util.MaskFactory.Direction;
-import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import model.ImageManager;
-import util.BufferedImageColorImageTranslator;
-import util.FileHelper;
-import util.ToolbarImages;
-
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-
-import static view.ViewConstants.TOOLBAR_SPACING;
 
 public class ToolbarPanel {
 
@@ -94,7 +110,8 @@ public class ToolbarPanel {
         isotropicFilterButton(),
         anisotropicFilterButton(),
         harrisKeypointsButton(),
-        susanKeypointsButton());
+        susanKeypointsButton(),
+        siftKeypointsButton());
 
     vBox.getChildren().add(hBox);
     vBox.getChildren().add(hFiltersBox);
@@ -516,7 +533,7 @@ public class ToolbarPanel {
   }
 
   private Node harrisKeypointsButton() {
-    return new ToolbarButton("Harris Keypoints", ToolbarImages.KEYPOINT,
+    return new ToolbarButton("Harris Keypoints", ToolbarImages.KEYPOINT_HARRIS,
         actionEvent -> {
           CustomInputTextDialog dialog = new CustomInputTextDialog("Harris Keypoints", Arrays.asList(
               new Field("Threshold (Percentage of Maximum):", "50.0")));
@@ -536,6 +553,20 @@ public class ToolbarPanel {
                     int threshold = dialog.getResult(0, Integer.class);
                     double cornerLimit = dialog.getResult(1, Double.class);
                     imageManager.applyTransformation(new SusanTransformation(threshold, cornerLimit));
+                }).getNode();
+    }
+   
+    private Node siftKeypointsButton() {
+        return new ToolbarButton("Sift Keypoints", ToolbarImages.KEYPOINT_SIFT,
+                actionEvent -> {
+                	File objectImageFile = FileHelper.loadImageFile();
+                	File sceneImageFile = FileHelper.loadImageFile();
+                	try {
+						SiftMatcher.match(objectImageFile, sceneImageFile);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
                 }).getNode();
     }
 

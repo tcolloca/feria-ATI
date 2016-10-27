@@ -38,8 +38,9 @@ public final class ToolbarImages {
   public static final ImageView FILTER_LOG = getImage("filter_log.png");
   public static final ImageView FILTER_ISOTROPIC = getImage("filter_iso.png");
   public static final ImageView FILTER_ANISOTROPIC = getImage("filter_aniso.png");
-  public static final ImageView KEYPOINT = getImage("keypoint.png");
+  public static final ImageView KEYPOINT_HARRIS = getImage("keypoint-harris.png");
   public static final ImageView KEYPOINT_SUSAN = getImage("keypoint-susan.png");
+  public static final ImageView KEYPOINT_SIFT = getImage("keypoint-sift.png");
 
   private static ImageView getImage(String name) {
     try {

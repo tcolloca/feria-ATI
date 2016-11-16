@@ -34,7 +34,7 @@ public class SarBand extends Band {
     @Override
     public Double apply(Double input) {
       if (normPixels == null) {
-        normPixels = new HashMap();
+        normPixels = new HashMap<>();
         Function<Double, Double> normFunction = new LinearFunction(min, 0.0, max, 255.0);
         double[][] newM = equalize(pixels, min, max);
         for (int i = 0; i < pixels.length; i++) {

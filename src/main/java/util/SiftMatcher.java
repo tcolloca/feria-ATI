@@ -33,9 +33,13 @@ public class SiftMatcher {
 
 	      System.out.println("Started....");
 	      System.out.println("Loading images...");
-	      Mat objectImage = Highgui.imread(objectFile.getCanonicalPath(), Highgui.CV_LOAD_IMAGE_COLOR);
+		  String[] dirsObj = objectFile.getAbsolutePath().split("/");
+		  String objectPath = dirsObj[dirsObj.length - 1];
+		  String[] dirsScene = sceneFile.getAbsolutePath().split("/");
+		  String scenePath = dirsScene[dirsScene.length - 1];
+	      Mat objectImage = Highgui.imread(objectPath, Highgui.CV_LOAD_IMAGE_COLOR);
 	      System.out.println(objectImage.rows());
-	      Mat sceneImage = Highgui.imread(sceneFile.getCanonicalPath(), Highgui.CV_LOAD_IMAGE_COLOR);
+	      Mat sceneImage = Highgui.imread(scenePath, Highgui.CV_LOAD_IMAGE_COLOR);
 
 	      MatOfKeyPoint objectKeyPoints = new MatOfKeyPoint();
 	      FeatureDetector featureDetector = FeatureDetector.create(FeatureDetector.SIFT);
@@ -91,6 +95,9 @@ public class SiftMatcher {
 
 	      if (goodMatchesList.size() >= 7) {
 	          System.out.println("Object Found!!!");
+	      } else {
+	          System.out.println("Object Not Found");
+	      }
 
 	          List<KeyPoint> objKeypointlist = objectKeyPoints.toList();
 	          List<KeyPoint> scnKeypointlist = sceneKeyPoints.toList();
@@ -121,7 +128,7 @@ public class SiftMatcher {
 	          System.out.println("Transforming object corners to scene corners...");
 	          Core.perspectiveTransform(obj_corners, scene_corners, homography);
 
-	          Mat img = Highgui.imread(sceneFile.getAbsolutePath(), Highgui.CV_LOAD_IMAGE_COLOR);
+	          Mat img = Highgui.imread(scenePath, Highgui.CV_LOAD_IMAGE_COLOR);
 
 	          Core.line(img, new Point(scene_corners.get(0, 0)), new Point(scene_corners.get(1, 0)), new Scalar(0, 255, 0), 4);
 	          Core.line(img, new Point(scene_corners.get(1, 0)), new Point(scene_corners.get(2, 0)), new Scalar(0, 255, 0), 4);
@@ -135,9 +142,6 @@ public class SiftMatcher {
 	          Features2d.drawMatches(objectImage, objectKeyPoints, sceneImage, sceneKeyPoints, goodMatches, matchoutput, matchestColor, newKeypointColor, new MatOfByte(), 2);
 
 	          Highgui.imwrite("matchoutput.jpg", matchoutput);
-	      } else {
-	          System.out.println("Object Not Found");
-	      }
 
 	      String filename = "keypoints.jpg";
 	      Highgui.imwrite(filename, outputImage);

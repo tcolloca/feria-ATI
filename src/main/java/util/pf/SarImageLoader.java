@@ -188,6 +188,7 @@ public class SarImageLoader {
         params.put(param[0].trim(), param[1].trim());
       }
     }
+    s.close();
     return params;
   }
 

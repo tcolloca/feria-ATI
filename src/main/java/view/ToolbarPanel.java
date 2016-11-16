@@ -22,9 +22,11 @@ import util.SiftMatcher;
 import util.ToolbarImages;
 
 import com.goodengineer.atibackend.model.ColorImage;
+import com.goodengineer.atibackend.transformation.CircleHoughTransformation;
 import com.goodengineer.atibackend.transformation.ConstrastTransformation;
 import com.goodengineer.atibackend.transformation.DynamicRangeCompressionTransformation;
 import com.goodengineer.atibackend.transformation.EqualizationTransformation;
+import com.goodengineer.atibackend.transformation.LineHoughTransformation;
 import com.goodengineer.atibackend.transformation.MultiplyImageTransformation;
 import com.goodengineer.atibackend.transformation.NegativeTransformation;
 import com.goodengineer.atibackend.transformation.PowerTransformation;
@@ -55,6 +57,7 @@ import com.goodengineer.atibackend.transformation.threshold.OtsuThresholdingTran
 import com.goodengineer.atibackend.transformation.threshold.ThresholdingTransformation;
 import com.goodengineer.atibackend.util.MaskFactory;
 import com.goodengineer.atibackend.util.MaskFactory.Direction;
+import com.goodengineer.atibackend.video.ObjectTracker;
 
 public class ToolbarPanel {
 
@@ -62,9 +65,11 @@ public class ToolbarPanel {
   private final HBox hFiltersBox = new HBox();
   private final VBox vBox = new VBox();
   private final ImageManager imageManager;
+  private final InfoPanel infoPanel;
 
-  ToolbarPanel(ImageManager imageManager) {
+  ToolbarPanel(ImageManager imageManager, InfoPanel infoPanel) {
     this.imageManager = imageManager;
+    this.infoPanel = infoPanel;
 
     hBox.setSpacing(TOOLBAR_SPACING);
     hBox.setAlignment(Pos.CENTER);
@@ -111,7 +116,10 @@ public class ToolbarPanel {
         anisotropicFilterButton(),
         harrisKeypointsButton(),
         susanKeypointsButton(),
-        siftKeypointsButton());
+        siftKeypointsButton(),
+        lineHoughButton(),
+        circleHoughButton(),
+        trackObjectButton());
 
     vBox.getChildren().add(hBox);
     vBox.getChildren().add(hFiltersBox);
@@ -563,6 +571,65 @@ public class ToolbarPanel {
                 	File sceneImageFile = FileHelper.loadImageFile();
                 	try {
 						SiftMatcher.match(objectImageFile, sceneImageFile);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+                }).getNode();
+    }
+    
+    private Node lineHoughButton() {
+        return new ToolbarButton("Line Hough Transform", ToolbarImages.KEYPOINT_SIFT,
+                actionEvent -> {
+                	CustomInputTextDialog dialog = new CustomInputTextDialog("Line Hough Transform", Arrays.asList(
+                            new Field("Angle Count:", "50"),
+                            new Field("Distance Count:", "50"), 
+                            new Field("Epsilon:", "1.0"),
+                            new Field("Threshold:", "60")));
+                	dialog.show();
+                	int angleCount = dialog.getResult(0, Integer.class);
+                	int distCount = dialog.getResult(1, Integer.class);
+                	double eps = dialog.getResult(2, Double.class);
+                	int threshold = dialog.getResult(3, Integer.class);
+                	imageManager.applyTransformation(new LineHoughTransformation(angleCount, distCount,
+                			eps, threshold));
+                }).getNode();
+    }
+    
+    private Node circleHoughButton() {
+        return new ToolbarButton("Circle Hough Transform", ToolbarImages.KEYPOINT_SIFT,
+                actionEvent -> {
+                	CustomInputTextDialog dialog = new CustomInputTextDialog("Circle Hough Transform", Arrays.asList(
+                            new Field("Width Count:", "50"),
+                            new Field("Height Count:", "50"), 
+                            new Field("Radius Count:", "50"),
+                            new Field("Radius Start:", "5"), 
+                            new Field("Radius Start:", "100"),
+                            new Field("Epsilon:", "30.0"),
+                            new Field("Threshold:", "60")));
+                	dialog.show();
+                	int widthCount = dialog.getResult(0, Integer.class);
+                	int heightCount = dialog.getResult(1, Integer.class);
+                	int radiusCount = dialog.getResult(2, Integer.class);
+                	int radiusStart = dialog.getResult(3, Integer.class);
+                	int radiusEnd = dialog.getResult(4, Integer.class);
+                	double eps = dialog.getResult(5, Double.class);
+                	int threshold = dialog.getResult(6, Integer.class);
+                	imageManager.applyTransformation(new CircleHoughTransformation(widthCount, heightCount,
+                			radiusCount, radiusStart, radiusEnd, eps, threshold));
+                }).getNode();
+    }
+    
+    private Node trackObjectButton() {
+        return new ToolbarButton("Track Object", ToolbarImages.KEYPOINT_SIFT,
+                actionEvent -> {
+                	ObjectTracker objTracker = new ObjectTracker(imageManager.getModifiableBackendImage(), 
+                			infoPanel.selectionX, infoPanel.selectionY, 
+                			infoPanel.selectionWidth, infoPanel.selectionHeight, 0.7);
+                	try {
+                		objTracker.setImage(imageManager.getModifiableBackendImage());
+                		objTracker.track();
+                		imageManager.refresh();
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

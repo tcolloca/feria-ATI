@@ -45,8 +45,9 @@ public class Main extends Application {
     GridPane mainGridPane = initMainGridPane();
     imagePanel = new ImagePanel(imageManager);
     Node imagePane = imagePanel.getNode();
-    Node infoPane = new InfoPanel(imageManager).getNode();
-    Node optionsPane = new ToolbarPanel(imageManager).getNode();
+    InfoPanel infoPanel = new InfoPanel(imageManager);
+    Node infoPane = infoPanel.getNode();
+    Node optionsPane = new ToolbarPanel(imageManager, infoPanel).getNode();
 
     mainGridPane.add(optionsPane, 0, 0);
     mainGridPane.add(imagePane, 0, 1);

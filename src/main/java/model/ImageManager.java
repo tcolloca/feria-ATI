@@ -248,6 +248,14 @@ public class ImageManager {
     return img;
   }
 
+  public com.goodengineer.atibackend.model.Image getModifiableBackendImage() {
+	  return modifiableImage;
+  }
+  
+  public void refresh() {
+	  imagePanel.showModified();
+  }
+  
   public float[] createHistogram() {
     return ImageUtils.createHistogram(modifiableImage.getBands().get(0));
   }

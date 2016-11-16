@@ -26,10 +26,10 @@ public class InfoPanel extends ImageEventAdapter {
 
   private Rectangle currentColorBox;
   private Text selectionInfoText;
-  private int selectionX;
-  private int selectionY;
-  private int selectionWidth;
-  private int selectionHeight;
+  int selectionX;
+  int selectionY;
+  int selectionWidth;
+  int selectionHeight;
 
   private Rectangle newColorBox;
 

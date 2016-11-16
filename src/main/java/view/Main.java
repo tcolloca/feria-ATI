@@ -62,12 +62,16 @@ public class Main extends Application {
       switch (event.getCode()) {
         case SPACE:
           imagePanel.showOriginal();
+        default:
+        	break;
       }});
 
     scene.setOnKeyReleased((event) -> {
       switch (event.getCode()) {
         case SPACE:
           imagePanel.showModified();
+	default:
+		break;
       }});
 
     stage.setMinWidth(2*MAIN_MIN_WIDTH);

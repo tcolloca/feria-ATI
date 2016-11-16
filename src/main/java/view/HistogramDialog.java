@@ -19,7 +19,7 @@ public class HistogramDialog {
   }
 
   public void show() {
-    Dialog dialog = new Dialog();
+    Dialog<Object> dialog = new Dialog<>();
     dialog.setTitle("Histogram");
 
     GridPane grid = new GridPane();
@@ -27,7 +27,7 @@ public class HistogramDialog {
     grid.setVgap(10);
     grid.setPadding(new Insets(20, 150, 10, 10));
 
-    BarChart<Number, Number> histogram = buildHistogram();
+    BarChart<String, Number> histogram = buildHistogram();
 
     grid.add(histogram, 0, 0);
 
@@ -40,7 +40,7 @@ public class HistogramDialog {
     dialog.show();
   }
 
-  private BarChart buildHistogram() {
+  private BarChart<String, Number> buildHistogram() {
     final CategoryAxis xAxis = new CategoryAxis();
     final NumberAxis yAxis = new NumberAxis();
     final BarChart<String, Number> barChart = new BarChart<>(xAxis,yAxis);
@@ -50,11 +50,11 @@ public class HistogramDialog {
     xAxis.setLabel("Colors");
     yAxis.setLabel("Relative Frequency");
 
-    XYChart.Series series1 = new XYChart.Series();
+    XYChart.Series<String, Number> series1 = new XYChart.Series<String, Number>();
     for (int i = 0; i < values.length; i++) {
-      series1.getData().add(new XYChart.Data(String.valueOf(i), values[i]));
+      series1.getData().add(new XYChart.Data<String, Number>(String.valueOf(i), values[i]));
     }
-    barChart.getData().addAll(series1);
+    barChart.getData().add(series1);
 
     return barChart;
   }

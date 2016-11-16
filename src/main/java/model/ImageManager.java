@@ -251,15 +251,37 @@ public class ImageManager {
     return img;
   }
 
-  public void createSyntheticImage(double alpha1, double gamma1, double alpha2, double gamma2) {
-    GammaDistribution xVar = new GammaDistribution(1, 1);
-    GammaDistribution y1Var = new GammaDistribution(-alpha1, gamma1);
-    GammaDistribution y2Var = new GammaDistribution(-alpha2, gamma2);
+  public void createSyntheticImage(double L, double alpha1, double gamma1, double alpha2, double gamma2) {
+	GammaDistribution xVar = new GammaDistribution(L, L);
+    GammaDistribution y1Var = new GammaDistribution(-alpha1, 1 / gamma1);
+    GammaDistribution y2Var = new GammaDistribution(-alpha2, 1 / gamma2);
 
     double[][] pixels = new double[200][200];
     for (int x = 0; x < 200; x++) {
       for (int y = 0; y < 200; y++) {
         if (Math.max(Math.abs(x - 100), Math.abs(y - 100)) < RADIUS) {
+          pixels[x][y] = xVar.sample() / y1Var.sample();
+        } else {
+          pixels[x][y] = xVar.sample() / y2Var.sample();
+        }
+      }
+    }
+
+    originalImage = new SarImage(new SarBand(pixels, "Gray"));
+    modifiableImage = (ColorImage) originalImage.clone();
+    imagePanel.showOriginal();
+    imagePanel.showModified();
+  }
+  
+  public void createSyntheticImageFromOriginal(double L, double alpha1, double gamma1, double alpha2, double gamma2) {
+	GammaDistribution xVar = new GammaDistribution(L, L);
+    GammaDistribution y1Var = new GammaDistribution(-alpha1, 1 / gamma1);
+    GammaDistribution y2Var = new GammaDistribution(-alpha2, 1 / gamma2);
+
+    double[][] pixels = new double[200][200];
+    for (int x = 0; x < originalImage.getWidth(); x++) {
+      for (int y = 0; y < originalImage.getHeight(); y++) {
+        if (originalImage.getGray(x, y) == 255) {
           pixels[x][y] = xVar.sample() / y1Var.sample();
         } else {
           pixels[x][y] = xVar.sample() / y2Var.sample();

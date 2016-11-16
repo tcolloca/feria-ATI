@@ -8,18 +8,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-
 import javax.imageio.ImageIO;
-
-import model.ImageManager;
-import util.BufferedImageColorImageTranslator;
-import util.FileHelper;
-import util.SiftMatcher;
-import util.ToolbarImages;
 
 import com.goodengineer.atibackend.model.ColorImage;
 import com.goodengineer.atibackend.transformation.ConstrastTransformation;
@@ -28,6 +17,7 @@ import com.goodengineer.atibackend.transformation.EqualizationTransformation;
 import com.goodengineer.atibackend.transformation.MultiplyImageTransformation;
 import com.goodengineer.atibackend.transformation.NegativeTransformation;
 import com.goodengineer.atibackend.transformation.PowerTransformation;
+import com.goodengineer.atibackend.transformation.RectBorderTransformation;
 import com.goodengineer.atibackend.transformation.ScaleTransformation;
 import com.goodengineer.atibackend.transformation.SubstractImageTransformation;
 import com.goodengineer.atibackend.transformation.SumImageTransformation;
@@ -55,6 +45,18 @@ import com.goodengineer.atibackend.transformation.threshold.OtsuThresholdingTran
 import com.goodengineer.atibackend.transformation.threshold.ThresholdingTransformation;
 import com.goodengineer.atibackend.util.MaskFactory;
 import com.goodengineer.atibackend.util.MaskFactory.Direction;
+
+import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import model.ImageManager;
+import util.BufferedImageColorImageTranslator;
+import util.ColorHelper;
+import util.FileHelper;
+import util.SiftMatcher;
+import util.ToolbarImages;
 
 public class ToolbarPanel {
 
@@ -284,6 +286,13 @@ public class ToolbarPanel {
           imageManager.applyTransformation(new VerticalFlipTransformation());
         }).getNode();
   }
+  
+//  private Node replaceColorButton() {
+////	  infoPanel.applyTransformation(new RectBorderTransformation(selectionX, selectionY,
+////	          selectionWidth + selectionX - 1, selectionHeight + selectionY - 1,
+////	          ColorHelper.convertToRgb(((Color) newColorBox.getFill())
+//	  // TODO
+//  }
 
   private Node gaussNoiseButton() {
     return new ToolbarButton("Gaussian Noise", ToolbarImages.NOISE_GAUSS,
@@ -561,8 +570,11 @@ public class ToolbarPanel {
                 actionEvent -> {
                 	File objectImageFile = FileHelper.loadImageFile();
                 	File sceneImageFile = FileHelper.loadImageFile();
+                	System.out.println(sceneImageFile.getAbsolutePath());
                 	try {
 						SiftMatcher.match(objectImageFile, sceneImageFile);
+                        File matchoutputFile = new File("matchoutput.jpg");
+                        imageManager.setImageFile(matchoutputFile);
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

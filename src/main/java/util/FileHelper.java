@@ -11,7 +11,11 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
@@ -33,7 +37,7 @@ public class FileHelper {
     return null;
   }
   
-  public static ArrayList<String> allPathsInFolder() {
+  public static List<String> allPathsInFolder() {
 	  
 	    Optional<File> file = getFile();
 	    if (file.isPresent()) {
@@ -46,17 +50,17 @@ public class FileHelper {
 	    return null;
   }
   
-	private static ArrayList<String> allPathsInFolder(String folderPath) {
+	private static List<String> allPathsInFolder(String folderPath) {
 		File folder = new File(folderPath);
 		File[] listOfFiles = folder.listFiles();
-		ArrayList<String> paths = new ArrayList<>();
-
-		for (int i = 0; i < listOfFiles.length; i++) {
-			if (listOfFiles[i].isFile()) {
+		List<String> rawPaths = Arrays.asList(listOfFiles).stream()
+				.map(file -> file.getAbsolutePath()).collect(Collectors.toList());
+		List<String> paths = new ArrayList<>();
+		Collections.sort(rawPaths, new AlphanumComparator());
+		for (int i = 0; i < rawPaths.size(); i++) {
+			if (new File(rawPaths.get(i)).isFile()) {
 //				save file and hope for an image
-				paths.add(listOfFiles[i].getAbsolutePath());
-			} else if (listOfFiles[i].isDirectory()) {
-//				skip directories
+				paths.add(rawPaths.get(i));
 			}
 		}
 		

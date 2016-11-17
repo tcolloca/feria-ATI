@@ -41,6 +41,13 @@ public final class ToolbarImages {
   public static final ImageView KEYPOINT_HARRIS = getImage("keypoint-harris.png");
   public static final ImageView KEYPOINT_SUSAN = getImage("keypoint-susan.png");
   public static final ImageView KEYPOINT_SIFT = getImage("keypoint-sift.png");
+  public static final ImageView HOUGH_LINE = getImage("hough_line.png");
+  public static final ImageView HOUGH_CIRCLE = getImage("hough_circle.png");
+  public static final ImageView OPEN = getImage("open.png");
+  public static final ImageView TRACK = getImage("track.png");
+  public static final ImageView PLAY = getImage("play.png");
+  public static final ImageView SKIP = getImage("skip.png");
+  public static final ImageView PAUSE = getImage("pause.png");
 
   private static ImageView getImage(String name) {
     try {

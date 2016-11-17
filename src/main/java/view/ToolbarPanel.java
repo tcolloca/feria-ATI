@@ -5,9 +5,7 @@ import static view.ViewConstants.TOOLBAR_SPACING;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -68,8 +66,9 @@ public class ToolbarPanel {
   private final ImageManager imageManager;
   private final InfoPanel infoPanel;
   
-  private ArrayList<String> allPaths;
+  private List<String> allPaths;
   private ObjectTracker tracker;
+  private boolean play;
   private int currentImage;
 
   ToolbarPanel(ImageManager imageManager, InfoPanel infoPanel) {
@@ -126,7 +125,9 @@ public class ToolbarPanel {
         circleHoughButton(),
         trackLoadPathsButton(),
         trackObjectButton(),
-        trackRightArrowButton());
+        trackRightArrowButton(),
+        playButton(),
+        stopButton());
 
     vBox.getChildren().add(hBox);
     vBox.getChildren().add(hFiltersBox);
@@ -596,7 +597,7 @@ public class ToolbarPanel {
     }
     
     private Node lineHoughButton() {
-        return new ToolbarButton("Line Hough Transform", ToolbarImages.KEYPOINT_SIFT,
+        return new ToolbarButton("Line Hough Transform", ToolbarImages.HOUGH_LINE,
                 actionEvent -> {
                 	CustomInputTextDialog dialog = new CustomInputTextDialog("Line Hough Transform", Arrays.asList(
                             new Field("Angle Count:", "50"),
@@ -614,7 +615,7 @@ public class ToolbarPanel {
     }
     
     private Node circleHoughButton() {
-        return new ToolbarButton("Circle Hough Transform", ToolbarImages.KEYPOINT_SIFT,
+        return new ToolbarButton("Circle Hough Transform", ToolbarImages.HOUGH_CIRCLE,
                 actionEvent -> {
                 	CustomInputTextDialog dialog = new CustomInputTextDialog("Circle Hough Transform", Arrays.asList(
                             new Field("Width Count:", "50"),
@@ -638,8 +639,9 @@ public class ToolbarPanel {
     }
     
     private Node trackLoadPathsButton() {
-        return new ToolbarButton("Track Object", null,
+        return new ToolbarButton("Track Object", ToolbarImages.OPEN,
                 actionEvent -> {
+                	tracker = null;
                 	allPaths = FileHelper.allPathsInFolder();
                     File imageFile = new File(allPaths.get(0));
                     imageManager.setImageFile(imageFile);
@@ -649,19 +651,19 @@ public class ToolbarPanel {
     }
     
     private Node trackObjectButton() {
-        return new ToolbarButton("Track Object", null,
+        return new ToolbarButton("Track Object", ToolbarImages.TRACK,
                 actionEvent -> {
                 	if (tracker == null) {
                         tracker = new ObjectTracker(imageManager.getModifiableBackendImage().clone(), 
                     			infoPanel.selectionX, infoPanel.selectionY, 
-                    			infoPanel.selectionWidth, infoPanel.selectionHeight, 0.99);
+                    			infoPanel.selectionWidth, infoPanel.selectionHeight, 1);
                 	} else {
                         File imageFile = new File(allPaths.get(currentImage));
                         imageManager.setImageFile(imageFile);
                 	}
                 	try {
                 		tracker.track();
-                		tracker.paintLOut(imageManager.getModifiableBackendImage());
+                		tracker.paintBorder(imageManager.getModifiableBackendImage());
                 		imageManager.refresh();
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
@@ -671,15 +673,39 @@ public class ToolbarPanel {
     }
     
     private Node trackRightArrowButton() {
-        return new ToolbarButton("Track Object", null,
+        return new ToolbarButton("Next Frame", ToolbarImages.SKIP,
                 actionEvent -> {
                 	currentImage++;
                 	if (currentImage >= allPaths.size()) return;
                     File imageFile = new File(allPaths.get(currentImage));
                     imageManager.setImageFile(imageFile);
                     tracker.setImage(imageManager.getModifiableBackendImage().clone());
-                    tracker.paintLOut(imageManager.getModifiableBackendImage());
+                    tracker.paintBorder(imageManager.getModifiableBackendImage());
                     imageManager.refresh();
+                }).getNode();
+    }
+    
+    private Node playButton() {
+        return new ToolbarButton("Play Tracking Video", ToolbarImages.PLAY,
+                actionEvent -> {
+                	new Thread(() -> {
+                		play = true;
+	                	while (++currentImage < allPaths.size() && play) {
+		                    File imageFile = new File(allPaths.get(currentImage));
+		                    imageManager.setImageFile(imageFile);
+		                    tracker.setImage(imageManager.getModifiableBackendImage().clone());
+		                    tracker.track();
+		                    tracker.paintBorder(imageManager.getModifiableBackendImage());
+		                    imageManager.refresh();
+	                	}
+                	}).start();
+                }).getNode();
+    }
+    
+    private Node stopButton() {
+        return new ToolbarButton("Stop Tracking Video", ToolbarImages.PAUSE,
+                actionEvent -> {
+                	play = false;
                 }).getNode();
     }
 

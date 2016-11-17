@@ -5,7 +5,9 @@ import static view.ViewConstants.TOOLBAR_SPACING;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -19,7 +21,6 @@ import com.goodengineer.atibackend.transformation.LineHoughTransformation;
 import com.goodengineer.atibackend.transformation.MultiplyImageTransformation;
 import com.goodengineer.atibackend.transformation.NegativeTransformation;
 import com.goodengineer.atibackend.transformation.PowerTransformation;
-import com.goodengineer.atibackend.transformation.RectBorderTransformation;
 import com.goodengineer.atibackend.transformation.ScaleTransformation;
 import com.goodengineer.atibackend.transformation.SubstractImageTransformation;
 import com.goodengineer.atibackend.transformation.SumImageTransformation;
@@ -53,10 +54,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import model.ImageManager;
 import util.BufferedImageColorImageTranslator;
-import util.ColorHelper;
 import util.FileHelper;
 import util.SiftMatcher;
 import util.ToolbarImages;
@@ -68,6 +67,10 @@ public class ToolbarPanel {
   private final VBox vBox = new VBox();
   private final ImageManager imageManager;
   private final InfoPanel infoPanel;
+  
+  private ArrayList<String> allPaths;
+  private ObjectTracker tracker;
+  private int currentImage;
 
   ToolbarPanel(ImageManager imageManager, InfoPanel infoPanel) {
     this.imageManager = imageManager;
@@ -121,7 +124,9 @@ public class ToolbarPanel {
         siftKeypointsButton(),
         lineHoughButton(),
         circleHoughButton(),
-        trackObjectButton());
+        trackLoadPathsButton(),
+        trackObjectButton(),
+        trackRightArrowButton());
 
     vBox.getChildren().add(hBox);
     vBox.getChildren().add(hFiltersBox);
@@ -632,20 +637,49 @@ public class ToolbarPanel {
                 }).getNode();
     }
     
-    private Node trackObjectButton() {
-        return new ToolbarButton("Track Object", ToolbarImages.KEYPOINT_SIFT,
+    private Node trackLoadPathsButton() {
+        return new ToolbarButton("Track Object", null,
                 actionEvent -> {
-                	ObjectTracker objTracker = new ObjectTracker(imageManager.getModifiableBackendImage(), 
-                			infoPanel.selectionX, infoPanel.selectionY, 
-                			infoPanel.selectionWidth, infoPanel.selectionHeight, 0.7);
+                	allPaths = FileHelper.allPathsInFolder();
+                    File imageFile = new File(allPaths.get(0));
+                    imageManager.setImageFile(imageFile);
+                    imageManager.refresh();
+                    currentImage = 0;
+                }).getNode();
+    }
+    
+    private Node trackObjectButton() {
+        return new ToolbarButton("Track Object", null,
+                actionEvent -> {
+                	if (tracker == null) {
+                        tracker = new ObjectTracker(imageManager.getModifiableBackendImage().clone(), 
+                    			infoPanel.selectionX, infoPanel.selectionY, 
+                    			infoPanel.selectionWidth, infoPanel.selectionHeight, 0.99);
+                	} else {
+                        File imageFile = new File(allPaths.get(currentImage));
+                        imageManager.setImageFile(imageFile);
+                	}
                 	try {
-                		objTracker.setImage(imageManager.getModifiableBackendImage());
-                		objTracker.track();
+                		tracker.track();
+                		tracker.paintLOut(imageManager.getModifiableBackendImage());
                 		imageManager.refresh();
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+                }).getNode();
+    }
+    
+    private Node trackRightArrowButton() {
+        return new ToolbarButton("Track Object", null,
+                actionEvent -> {
+                	currentImage++;
+                	if (currentImage >= allPaths.size()) return;
+                    File imageFile = new File(allPaths.get(currentImage));
+                    imageManager.setImageFile(imageFile);
+                    tracker.setImage(imageManager.getModifiableBackendImage().clone());
+                    tracker.paintLOut(imageManager.getModifiableBackendImage());
+                    imageManager.refresh();
                 }).getNode();
     }
 

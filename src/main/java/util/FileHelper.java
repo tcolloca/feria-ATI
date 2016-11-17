@@ -1,14 +1,20 @@
 package util;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.*;
+import static view.ViewConstants.FILE_CHOOSER_FONT;
+import static view.ViewConstants.FILE_CHOOSER_HEIGHT;
+import static view.ViewConstants.FILE_CHOOSER_WIDTH;
+
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Optional;
 
-import static view.ViewConstants.*;
+import javax.imageio.ImageIO;
+import javax.swing.JFileChooser;
 
 public class FileHelper {
 
@@ -21,11 +27,41 @@ public class FileHelper {
     Optional<File> file = getFile();
     if (file.isPresent()) {
       // TODO: Check.
-      return file.get();
+    	return file.get();
     }
     // TODO
     return null;
   }
+  
+  public static ArrayList<String> allPathsInFolder() {
+	  
+	    Optional<File> file = getFile();
+	    if (file.isPresent()) {
+	      // TODO: Check.
+	    	String folderPath = file.get().getAbsolutePath();
+	    	folderPath = folderPath.substring(0, folderPath.lastIndexOf("\\"));
+	    	return allPathsInFolder(folderPath);
+	    }
+	    // TODO
+	    return null;
+  }
+  
+	private static ArrayList<String> allPathsInFolder(String folderPath) {
+		File folder = new File(folderPath);
+		File[] listOfFiles = folder.listFiles();
+		ArrayList<String> paths = new ArrayList<>();
+
+		for (int i = 0; i < listOfFiles.length; i++) {
+			if (listOfFiles[i].isFile()) {
+//				save file and hope for an image
+				paths.add(listOfFiles[i].getAbsolutePath());
+			} else if (listOfFiles[i].isDirectory()) {
+//				skip directories
+			}
+		}
+		
+		return paths;
+	}
 
   private static Optional<File> getFile() {
     JFileChooser fileChooser = getFileChooser();

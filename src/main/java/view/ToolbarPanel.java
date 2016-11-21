@@ -602,12 +602,16 @@ public class ToolbarPanel {
         return new ToolbarButton("Canny", null,
                 actionEvent -> {
                     CustomInputTextDialog dialog = new CustomInputTextDialog("Canny transformation", Arrays.asList(
+                    		new Field("size:", "7"),
+                    		new Field("sigma:", "2"),
                             new Field("l1:", "85"),
                             new Field("l2:", "170")));
                         dialog.show();
-                        int l1 = dialog.getResult(0, Integer.class);
-                        int l2 = dialog.getResult(1, Integer.class);
-                	imageManager.applyTransformation(new CannyTransformation(l1, l2));
+                        int size = dialog.getResult(0, Integer.class);
+                        double sigma = dialog.getResult(1, Double.class);
+                        int l1 = dialog.getResult(2, Integer.class);
+                        int l2 = dialog.getResult(3, Integer.class);
+                	imageManager.applyTransformation(new CannyTransformation(size, sigma, l1, l2));
                 }).getNode();
     }
     

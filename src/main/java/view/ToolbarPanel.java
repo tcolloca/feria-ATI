@@ -34,6 +34,7 @@ import com.goodengineer.atibackend.transformation.PowerTransformation;
 import com.goodengineer.atibackend.transformation.ScaleTransformation;
 import com.goodengineer.atibackend.transformation.SubstractImageTransformation;
 import com.goodengineer.atibackend.transformation.SumImageTransformation;
+import com.goodengineer.atibackend.transformation.canny.CannyTransformation;
 import com.goodengineer.atibackend.transformation.filter.FilterAndZeroCrossTransformation;
 import com.goodengineer.atibackend.transformation.filter.FilterTransformation;
 import com.goodengineer.atibackend.transformation.filter.MedianFilterTransformation;
@@ -67,6 +68,11 @@ public class ToolbarPanel {
   private final VBox vBox = new VBox();
   private final ImageManager imageManager;
   private final InfoPanel infoPanel;
+  
+  private List<String> allPaths;
+  private ObjectTracker tracker;
+  private boolean play;
+  private int currentImage;
 
   ToolbarPanel(ImageManager imageManager, InfoPanel infoPanel) {
     this.imageManager = imageManager;
@@ -118,10 +124,15 @@ public class ToolbarPanel {
         harrisKeypointsButton(),
         susanKeypointsButton(),
         siftKeypointsButton(),
+        cannyButton(),
         lineHoughButton(),
         circleHoughButton(),
+        trackLoadPathsButton(),
         trackObjectButton(),
-        swcButton());
+        trackRightArrowButton(),
+        playButton(),
+        stopButton(),
+        recognizePlatesButton());
 
     vBox.getChildren().add(hBox);
     vBox.getChildren().add(hFiltersBox);
@@ -590,8 +601,25 @@ public class ToolbarPanel {
                 }).getNode();
     }
     
+    private Node cannyButton() {
+        return new ToolbarButton("Canny", ToolbarImages.CANNY,
+                actionEvent -> {
+                    CustomInputTextDialog dialog = new CustomInputTextDialog("Canny transformation", Arrays.asList(
+                    		new Field("size:", "7"),
+                    		new Field("sigma:", "2"),
+                            new Field("l1:", "85"),
+                            new Field("l2:", "170")));
+                        dialog.show();
+                        int size = dialog.getResult(0, Integer.class);
+                        double sigma = dialog.getResult(1, Double.class);
+                        int l1 = dialog.getResult(2, Integer.class);
+                        int l2 = dialog.getResult(3, Integer.class);
+                	imageManager.applyTransformation(new CannyTransformation(size, sigma, l1, l2));
+                }).getNode();
+    }
+    
     private Node lineHoughButton() {
-        return new ToolbarButton("Line Hough Transform", ToolbarImages.KEYPOINT_SIFT,
+        return new ToolbarButton("Line Hough Transform", ToolbarImages.HOUGH_LINE,
                 actionEvent -> {
                 	CustomInputTextDialog dialog = new CustomInputTextDialog("Line Hough Transform", Arrays.asList(
                             new Field("Angle Count:", "50"),
@@ -609,7 +637,7 @@ public class ToolbarPanel {
     }
     
     private Node circleHoughButton() {
-        return new ToolbarButton("Circle Hough Transform", ToolbarImages.KEYPOINT_SIFT,
+        return new ToolbarButton("Circle Hough Transform", ToolbarImages.HOUGH_CIRCLE,
                 actionEvent -> {
                 	CustomInputTextDialog dialog = new CustomInputTextDialog("Circle Hough Transform", Arrays.asList(
                             new Field("Width Count:", "50"),
@@ -632,15 +660,32 @@ public class ToolbarPanel {
                 }).getNode();
     }
     
-    private Node trackObjectButton() {
-        return new ToolbarButton("Track Object", ToolbarImages.KEYPOINT_SIFT,
+    private Node trackLoadPathsButton() {
+        return new ToolbarButton("Track Object", ToolbarImages.OPEN,
                 actionEvent -> {
-                	ObjectTracker objTracker = new ObjectTracker(imageManager.getModifiableBackendImage(), 
-                			infoPanel.selectionX, infoPanel.selectionY, 
-                			infoPanel.selectionWidth, infoPanel.selectionHeight, 0.7);
+                	tracker = null;
+                	allPaths = FileHelper.allPathsInFolder();
+                    File imageFile = new File(allPaths.get(0));
+                    imageManager.setImageFile(imageFile);
+                    imageManager.refresh();
+                    currentImage = 0;
+                }).getNode();
+    }
+    
+    private Node trackObjectButton() {
+        return new ToolbarButton("Track Object", ToolbarImages.TRACK,
+                actionEvent -> {
+                	if (tracker == null) {
+                        tracker = new ObjectTracker(imageManager.getModifiableBackendImage().clone(), 
+                    			infoPanel.selectionX, infoPanel.selectionY, 
+                    			infoPanel.selectionWidth, infoPanel.selectionHeight, 1);
+                	} else {
+                        File imageFile = new File(allPaths.get(currentImage));
+                        imageManager.setImageFile(imageFile);
+                	}
                 	try {
-                		objTracker.setImage(imageManager.getModifiableBackendImage());
-                		objTracker.track();
+                		tracker.track();
+                		tracker.paintBorder(imageManager.getModifiableBackendImage());
                 		imageManager.refresh();
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
@@ -649,8 +694,45 @@ public class ToolbarPanel {
                 }).getNode();
     }
     
-    private Node swcButton() {
-        return new ToolbarButton("SWC", ToolbarImages.KEYPOINT_SIFT,
+    private Node trackRightArrowButton() {
+        return new ToolbarButton("Next Frame", ToolbarImages.SKIP,
+                actionEvent -> {
+                	currentImage++;
+                	if (currentImage >= allPaths.size()) return;
+                    File imageFile = new File(allPaths.get(currentImage));
+                    imageManager.setImageFile(imageFile);
+                    tracker.setImage(imageManager.getModifiableBackendImage().clone());
+                    tracker.paintBorder(imageManager.getModifiableBackendImage());
+                    imageManager.refresh();
+                }).getNode();
+    }
+    
+    private Node playButton() {
+        return new ToolbarButton("Play Tracking Video", ToolbarImages.PLAY,
+                actionEvent -> {
+                	new Thread(() -> {
+                		play = true;
+	                	while (++currentImage < allPaths.size() && play) {
+		                    File imageFile = new File(allPaths.get(currentImage));
+		                    imageManager.setImageFile(imageFile);
+		                    tracker.setImage(imageManager.getModifiableBackendImage().clone());
+		                    tracker.track();
+		                    tracker.paintBorder(imageManager.getModifiableBackendImage());
+		                    imageManager.refresh();
+	                	}
+                	}).start();
+                }).getNode();
+    }
+    
+    private Node stopButton() {
+        return new ToolbarButton("Stop Tracking Video", ToolbarImages.PAUSE,
+                actionEvent -> {
+                	play = false;
+                }).getNode();
+    }
+    
+    private Node recognizePlatesButton() {
+        return new ToolbarButton("Recognize Plates", ToolbarImages.PLATES,
                 actionEvent -> {
                 	if (!imageManager.isGrayScale()) {
                 		imageManager.getValueBand();

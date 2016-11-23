@@ -91,7 +91,7 @@ public class RubberBandSelection {
     if( event.isSecondaryButtonDown())
       return;
 
-    reset();
+//    reset();
     imageManager.checkPixelsColor(
         (int) Math.round(getBounds().getMinX()), (int) Math.round(getBounds().getMinY()),
         (int) Math.round(getBounds().getWidth()), (int) Math.round(getBounds().getHeight()));

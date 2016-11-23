@@ -8,9 +8,21 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+
 import javax.imageio.ImageIO;
 
+import model.ImageManager;
+import util.BufferedImageColorImageTranslator;
+import util.FileHelper;
+import util.SiftMatcher;
+import util.ToolbarImages;
+
 import com.goodengineer.atibackend.model.ColorImage;
+import com.goodengineer.atibackend.plates.PlateRecognitionTransformation;
 import com.goodengineer.atibackend.transformation.CircleHoughTransformation;
 import com.goodengineer.atibackend.transformation.ConstrastTransformation;
 import com.goodengineer.atibackend.transformation.DynamicRangeCompressionTransformation;
@@ -19,7 +31,6 @@ import com.goodengineer.atibackend.transformation.LineHoughTransformation;
 import com.goodengineer.atibackend.transformation.MultiplyImageTransformation;
 import com.goodengineer.atibackend.transformation.NegativeTransformation;
 import com.goodengineer.atibackend.transformation.PowerTransformation;
-import com.goodengineer.atibackend.transformation.RectBorderTransformation;
 import com.goodengineer.atibackend.transformation.ScaleTransformation;
 import com.goodengineer.atibackend.transformation.SubstractImageTransformation;
 import com.goodengineer.atibackend.transformation.SumImageTransformation;
@@ -48,18 +59,6 @@ import com.goodengineer.atibackend.transformation.threshold.ThresholdingTransfor
 import com.goodengineer.atibackend.util.MaskFactory;
 import com.goodengineer.atibackend.util.MaskFactory.Direction;
 import com.goodengineer.atibackend.video.ObjectTracker;
-
-import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import model.ImageManager;
-import util.BufferedImageColorImageTranslator;
-import util.ColorHelper;
-import util.FileHelper;
-import util.SiftMatcher;
-import util.ToolbarImages;
 
 public class ToolbarPanel {
 
@@ -121,7 +120,8 @@ public class ToolbarPanel {
         siftKeypointsButton(),
         lineHoughButton(),
         circleHoughButton(),
-        trackObjectButton());
+        trackObjectButton(),
+        swcButton());
 
     vBox.getChildren().add(hBox);
     vBox.getChildren().add(hFiltersBox);
@@ -646,6 +646,16 @@ public class ToolbarPanel {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+                }).getNode();
+    }
+    
+    private Node swcButton() {
+        return new ToolbarButton("SWC", ToolbarImages.KEYPOINT_SIFT,
+                actionEvent -> {
+                	if (!imageManager.isGrayScale()) {
+                		imageManager.getValueBand();
+                	}
+                	imageManager.applyTransformation(new PlateRecognitionTransformation());
                 }).getNode();
     }
 

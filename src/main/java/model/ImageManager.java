@@ -37,6 +37,7 @@ public class ImageManager {
   private final Translator<BufferedImage, ColorImage> translator;
 
   private final List<Pair<Transformation, BandType>> transformations = new ArrayList<>();
+  private boolean isGrayScale = false;
 
   public ImageManager() {
     this.translator = new BufferedImageColorImageTranslator();
@@ -53,6 +54,7 @@ public class ImageManager {
         setSarImageFile(imageFile, 1, 1, "");
       } else {
         BufferedImage bufferedImage = ImageIO.read(imageFile);
+        isGrayScale = false;
         originalImage = translator.translateForward(bufferedImage);
         modifiableImage = (ColorImage) originalImage.clone();
         transformations.clear();
@@ -77,7 +79,12 @@ public class ImageManager {
   }
 
   public void applyTransformation(Transformation transformation) {
-    applyTransformation(transformation, BandType.ALL);
+	  BandType bandType = BandType.ALL;
+	  if (isGrayScale) {
+		  System.out.println("GRAY :d");
+		  bandType = BandType.GRAY;
+	  }
+	  applyTransformation(transformation, bandType);
   }
 
   public void applyTransformation(Transformation transformation, BandType bandType) {
@@ -218,6 +225,7 @@ public class ImageManager {
         buffModifiableImage.setRGB(w, h, ColorHelper.getGrayInRgb(hsv[2]));
       }
     }
+    isGrayScale = true;
     modifiableImage = translator.translateForward(buffModifiableImage);
 
     imagePanel.showModified();
@@ -310,4 +318,8 @@ public class ImageManager {
   public enum BandType {
     RED, GREEN, BLUE, GRAY, ALL;
   }
+
+	public boolean isGrayScale() {
+		return isGrayScale;
+	}
 }

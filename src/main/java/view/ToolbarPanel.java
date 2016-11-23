@@ -8,9 +8,21 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+
 import javax.imageio.ImageIO;
 
+import model.ImageManager;
+import util.BufferedImageColorImageTranslator;
+import util.FileHelper;
+import util.SiftMatcher;
+import util.ToolbarImages;
+
 import com.goodengineer.atibackend.model.ColorImage;
+import com.goodengineer.atibackend.plates.PlateRecognitionTransformation;
 import com.goodengineer.atibackend.transformation.CircleHoughTransformation;
 import com.goodengineer.atibackend.transformation.ConstrastTransformation;
 import com.goodengineer.atibackend.transformation.DynamicRangeCompressionTransformation;
@@ -22,6 +34,7 @@ import com.goodengineer.atibackend.transformation.PowerTransformation;
 import com.goodengineer.atibackend.transformation.ScaleTransformation;
 import com.goodengineer.atibackend.transformation.SubstractImageTransformation;
 import com.goodengineer.atibackend.transformation.SumImageTransformation;
+import com.goodengineer.atibackend.transformation.canny.CannyTransformation;
 import com.goodengineer.atibackend.transformation.filter.FilterAndZeroCrossTransformation;
 import com.goodengineer.atibackend.transformation.filter.FilterTransformation;
 import com.goodengineer.atibackend.transformation.filter.MedianFilterTransformation;
@@ -47,16 +60,6 @@ import com.goodengineer.atibackend.transformation.threshold.ThresholdingTransfor
 import com.goodengineer.atibackend.util.MaskFactory;
 import com.goodengineer.atibackend.util.MaskFactory.Direction;
 import com.goodengineer.atibackend.video.ObjectTracker;
-
-import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import model.ImageManager;
-import util.BufferedImageColorImageTranslator;
-import util.FileHelper;
-import util.SiftMatcher;
-import util.ToolbarImages;
 
 public class ToolbarPanel {
 
@@ -121,13 +124,15 @@ public class ToolbarPanel {
         harrisKeypointsButton(),
         susanKeypointsButton(),
         siftKeypointsButton(),
+        cannyButton(),
         lineHoughButton(),
         circleHoughButton(),
         trackLoadPathsButton(),
         trackObjectButton(),
         trackRightArrowButton(),
         playButton(),
-        stopButton());
+        stopButton(),
+        recognizePlatesButton());
 
     vBox.getChildren().add(hBox);
     vBox.getChildren().add(hFiltersBox);
@@ -596,6 +601,23 @@ public class ToolbarPanel {
                 }).getNode();
     }
     
+    private Node cannyButton() {
+        return new ToolbarButton("Canny", ToolbarImages.CANNY,
+                actionEvent -> {
+                    CustomInputTextDialog dialog = new CustomInputTextDialog("Canny transformation", Arrays.asList(
+                    		new Field("size:", "7"),
+                    		new Field("sigma:", "2"),
+                            new Field("l1:", "85"),
+                            new Field("l2:", "170")));
+                        dialog.show();
+                        int size = dialog.getResult(0, Integer.class);
+                        double sigma = dialog.getResult(1, Double.class);
+                        int l1 = dialog.getResult(2, Integer.class);
+                        int l2 = dialog.getResult(3, Integer.class);
+                	imageManager.applyTransformation(new CannyTransformation(size, sigma, l1, l2));
+                }).getNode();
+    }
+    
     private Node lineHoughButton() {
         return new ToolbarButton("Line Hough Transform", ToolbarImages.HOUGH_LINE,
                 actionEvent -> {
@@ -706,6 +728,16 @@ public class ToolbarPanel {
         return new ToolbarButton("Stop Tracking Video", ToolbarImages.PAUSE,
                 actionEvent -> {
                 	play = false;
+                }).getNode();
+    }
+    
+    private Node recognizePlatesButton() {
+        return new ToolbarButton("Recognize Plates", ToolbarImages.PLATES,
+                actionEvent -> {
+                	if (!imageManager.isGrayScale()) {
+                		imageManager.getValueBand();
+                	}
+                	imageManager.applyTransformation(new PlateRecognitionTransformation());
                 }).getNode();
     }
 

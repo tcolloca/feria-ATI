@@ -2,24 +2,34 @@ package view;
 
 import static view.ViewConstants.TOOLBAR_SPACING;
 
+
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+
+
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+
+
 import javax.imageio.ImageIO;
+
+
 
 import model.ImageManager;
 import util.BufferedImageColorImageTranslator;
 import util.FileHelper;
 import util.SiftMatcher;
 import util.ToolbarImages;
+
+
 
 import com.goodengineer.atibackend.model.ColorImage;
 import com.goodengineer.atibackend.plates.PlateRecognitionTransformation;
@@ -34,6 +44,7 @@ import com.goodengineer.atibackend.transformation.PowerTransformation;
 import com.goodengineer.atibackend.transformation.ScaleTransformation;
 import com.goodengineer.atibackend.transformation.SubstractImageTransformation;
 import com.goodengineer.atibackend.transformation.SumImageTransformation;
+import com.goodengineer.atibackend.transformation.Transformation;
 import com.goodengineer.atibackend.transformation.canny.CannyTransformation;
 import com.goodengineer.atibackend.transformation.filter.FilterAndZeroCrossTransformation;
 import com.goodengineer.atibackend.transformation.filter.FilterTransformation;
@@ -734,11 +745,17 @@ public class ToolbarPanel {
     private Node recognizePlatesButton() {
         return new ToolbarButton("Recognize Plates", ToolbarImages.PLATES,
                 actionEvent -> {
-                	if (!imageManager.isGrayScale()) {
-                		System.out.println("Turning to B & W...");
+                	Transformation PRT = new PlateRecognitionTransformation();
+                	allPaths = FileHelper.allPathsInFolder();
+                	for (String imageFile : allPaths) {
+                		imageManager.setImageFile(new File(imageFile));
                 		imageManager.getValueBand();
+                		try {
+                			imageManager.applyTransformation(PRT);
+                		} catch (Exception e) {
+                			e.printStackTrace();
+                		}
                 	}
-                	imageManager.applyTransformation(new PlateRecognitionTransformation());
                 }).getNode();
     }
 

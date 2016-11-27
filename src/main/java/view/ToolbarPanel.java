@@ -735,6 +735,7 @@ public class ToolbarPanel {
         return new ToolbarButton("Recognize Plates", ToolbarImages.PLATES,
                 actionEvent -> {
                 	if (!imageManager.isGrayScale()) {
+                		System.out.println("Turning to B & W...");
                 		imageManager.getValueBand();
                 	}
                 	imageManager.applyTransformation(new PlateRecognitionTransformation());

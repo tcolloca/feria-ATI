@@ -81,7 +81,6 @@ public class ImageManager {
   public void applyTransformation(Transformation transformation) {
 	  BandType bandType = BandType.ALL;
 	  if (isGrayScale) {
-		  System.out.println("GRAY :d");
 		  bandType = BandType.GRAY;
 	  }
 	  applyTransformation(transformation, bandType);

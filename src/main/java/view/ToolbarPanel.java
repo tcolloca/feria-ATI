@@ -748,6 +748,7 @@ public class ToolbarPanel {
                 	Transformation PRT = new PlateRecognitionTransformation();
                 	allPaths = FileHelper.allPathsInFolder();
                 	for (String imageFile : allPaths) {
+                		System.out.println("Loading: " + imageFile);
                 		imageManager.setImageFile(new File(imageFile));
                 		imageManager.getValueBand();
                 		try {

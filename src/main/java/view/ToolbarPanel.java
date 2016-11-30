@@ -24,6 +24,7 @@ import com.goodengineer.atibackend.transformation.PowerTransformation;
 import com.goodengineer.atibackend.transformation.ScaleTransformation;
 import com.goodengineer.atibackend.transformation.SubstractImageTransformation;
 import com.goodengineer.atibackend.transformation.SumImageTransformation;
+import com.goodengineer.atibackend.transformation.Transformation;
 import com.goodengineer.atibackend.transformation.canny.CannyTransformation;
 import com.goodengineer.atibackend.transformation.filter.FilterAndZeroCrossTransformation;
 import com.goodengineer.atibackend.transformation.filter.FilterTransformation;
@@ -735,10 +736,18 @@ public class ToolbarPanel {
     private Node recognizePlatesButton() {
         return new ToolbarButton("Recognize Plates", ToolbarImages.PLATES,
                 actionEvent -> {
-                	if (!imageManager.isGrayScale()) {
+                	Transformation PRT = new PlateRecognitionTransformation();
+                	allPaths = FileHelper.allPathsInFolder();
+                	for (String imageFile : allPaths) {
+                		System.out.println("Loading: " + imageFile);
+                		imageManager.setImageFile(new File(imageFile));
                 		imageManager.getValueBand();
+                		try {
+                			imageManager.applyTransformation(PRT);
+                		} catch (Exception e) {
+                			e.printStackTrace();
+                		}
                 	}
-                	imageManager.applyTransformation(new PlateRecognitionTransformation());
                 }).getNode();
     }
     

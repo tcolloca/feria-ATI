@@ -8,23 +8,13 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-
 import javax.imageio.ImageIO;
-
-import model.ImageManager;
-import util.BufferedImageColorImageTranslator;
-import util.FileHelper;
-import util.SiftMatcher;
-import util.ToolbarImages;
 
 import com.goodengineer.atibackend.model.ColorImage;
 import com.goodengineer.atibackend.plates.PlateRecognitionTransformation;
 import com.goodengineer.atibackend.transformation.CircleHoughTransformation;
 import com.goodengineer.atibackend.transformation.ConstrastTransformation;
+import com.goodengineer.atibackend.transformation.DecreaseResolutionTransformation;
 import com.goodengineer.atibackend.transformation.DynamicRangeCompressionTransformation;
 import com.goodengineer.atibackend.transformation.EqualizationTransformation;
 import com.goodengineer.atibackend.transformation.LineHoughTransformation;
@@ -60,6 +50,16 @@ import com.goodengineer.atibackend.transformation.threshold.ThresholdingTransfor
 import com.goodengineer.atibackend.util.MaskFactory;
 import com.goodengineer.atibackend.util.MaskFactory.Direction;
 import com.goodengineer.atibackend.video.ObjectTracker;
+
+import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import model.ImageManager;
+import util.BufferedImageColorImageTranslator;
+import util.FileHelper;
+import util.SiftMatcher;
+import util.ToolbarImages;
 
 public class ToolbarPanel {
 
@@ -132,7 +132,8 @@ public class ToolbarPanel {
         trackRightArrowButton(),
         playButton(),
         stopButton(),
-        recognizePlatesButton());
+        recognizePlatesButton(),
+        reduceResolutionButton());
 
     vBox.getChildren().add(hBox);
     vBox.getChildren().add(hFiltersBox);
@@ -738,6 +739,17 @@ public class ToolbarPanel {
                 		imageManager.getValueBand();
                 	}
                 	imageManager.applyTransformation(new PlateRecognitionTransformation());
+                }).getNode();
+    }
+    
+    private Node reduceResolutionButton() {
+        return new ToolbarButton("Reduce Resolution", null,
+                actionEvent -> {
+                	CustomInputTextDialog dialog = new CustomInputTextDialog("Reduce Resolution", Arrays.asList(
+                            new Field("Size:", "3")));
+                	dialog.show();
+                	int size = dialog.getResult(0, Integer.class);
+                	imageManager.applyTransformation(new DecreaseResolutionTransformation(size));
                 }).getNode();
     }
 

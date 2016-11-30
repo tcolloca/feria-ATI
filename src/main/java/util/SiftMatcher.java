@@ -95,6 +95,7 @@ public class SiftMatcher {
 
 	      if (goodMatchesList.size() >= 7) {
 	          System.out.println("Object Found!!!");
+	          System.out.println("Matches: " + goodMatchesList.size());
 	      } else {
 	          System.out.println("Object Not Found");
 	      }

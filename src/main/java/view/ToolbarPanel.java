@@ -61,6 +61,7 @@ import util.BufferedImageColorImageTranslator;
 import util.FileHelper;
 import util.SiftMatcher;
 import util.ToolbarImages;
+import util.pf.SarExperiments;
 
 public class ToolbarPanel {
 
@@ -134,7 +135,8 @@ public class ToolbarPanel {
         playButton(),
         stopButton(),
         recognizePlatesButton(),
-        reduceResolutionButton());
+        reduceResolutionButton(),
+        runExperimentsButton());
 
     vBox.getChildren().add(hBox);
     vBox.getChildren().add(hFiltersBox);
@@ -759,6 +761,20 @@ public class ToolbarPanel {
                 	dialog.show();
                 	int size = dialog.getResult(0, Integer.class);
                 	imageManager.applyTransformation(new DecreaseResolutionTransformation(size));
+                }).getNode();
+    }
+    
+    private Node runExperimentsButton() {
+        return new ToolbarButton("Reduce Resolution", null,
+                actionEvent -> {
+                	try {
+                		SarExperiments experiments = new SarExperiments(imageManager);
+                		experiments.runResolution();
+//						experiments.runAlphaAndGamma();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
                 }).getNode();
     }
 

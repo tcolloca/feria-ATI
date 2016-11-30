@@ -49,6 +49,11 @@ public class SarImage extends ColorImage {
   public int getBlue(int x, int y) {
     return band.getPixel(x, y);
   }
+  
+  @Override
+  public int getGray(int x, int y) {
+	  return band.getPixel(x, y);
+  }
 
   public List<Band> getBands() {
     return Arrays.asList(band, band, band);

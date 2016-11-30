@@ -106,7 +106,7 @@ public class FileHelper {
   
   public static void saveImage(BufferedImage image, String fileName) {
 	      String ext = DEFAULT_EXT;
-	      if (fileName.matches(".*\\.(png|bmp|ppm|raw)$")) {
+	      if (fileName.matches(".*\\.(png|bmp|ppm|raw|jpg)$")) {
 	        ext = fileName.split("\\.")[1];
 	      }
 	      File outputFile = new File(fileName.split("\\.")[0] + "." + ext);

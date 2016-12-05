@@ -738,18 +738,9 @@ public class ToolbarPanel {
     private Node recognizePlatesButton() {
         return new ToolbarButton("Recognize Plates", ToolbarImages.PLATES,
                 actionEvent -> {
+                	imageManager.getValueBand();
                 	Transformation PRT = new PlateRecognitionTransformation();
-                	allPaths = FileHelper.allPathsInFolder();
-                	for (String imageFile : allPaths) {
-                		System.out.println("Loading: " + imageFile);
-                		imageManager.setImageFile(new File(imageFile));
-                		imageManager.getValueBand();
-                		try {
-                			imageManager.applyTransformation(PRT);
-                		} catch (Exception e) {
-                			e.printStackTrace();
-                		}
-                	}
+                	imageManager.applyTransformation(PRT);
                 }).getNode();
     }
     

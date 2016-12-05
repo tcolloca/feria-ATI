@@ -2,39 +2,19 @@ package view;
 
 import static view.ViewConstants.TOOLBAR_SPACING;
 
-
-
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-
-
-import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-
-
-
 import javax.imageio.ImageIO;
-
-
-
-import model.ImageManager;
-import util.BufferedImageColorImageTranslator;
-import util.FileHelper;
-import util.SiftMatcher;
-import util.ToolbarImages;
-
-
 
 import com.goodengineer.atibackend.model.ColorImage;
 import com.goodengineer.atibackend.plates.PlateRecognitionTransformation;
 import com.goodengineer.atibackend.transformation.CircleHoughTransformation;
 import com.goodengineer.atibackend.transformation.ConstrastTransformation;
+import com.goodengineer.atibackend.transformation.DecreaseResolutionTransformation;
 import com.goodengineer.atibackend.transformation.DynamicRangeCompressionTransformation;
 import com.goodengineer.atibackend.transformation.EqualizationTransformation;
 import com.goodengineer.atibackend.transformation.LineHoughTransformation;
@@ -71,6 +51,17 @@ import com.goodengineer.atibackend.transformation.threshold.ThresholdingTransfor
 import com.goodengineer.atibackend.util.MaskFactory;
 import com.goodengineer.atibackend.util.MaskFactory.Direction;
 import com.goodengineer.atibackend.video.ObjectTracker;
+
+import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import model.ImageManager;
+import util.BufferedImageColorImageTranslator;
+import util.FileHelper;
+import util.SiftMatcher;
+import util.ToolbarImages;
+import util.pf.SarExperiments;
 
 public class ToolbarPanel {
 
@@ -143,7 +134,9 @@ public class ToolbarPanel {
         trackRightArrowButton(),
         playButton(),
         stopButton(),
-        recognizePlatesButton());
+        recognizePlatesButton(),
+        reduceResolutionButton(),
+        runExperimentsButton());
 
     vBox.getChildren().add(hBox);
     vBox.getChildren().add(hFiltersBox);
@@ -757,6 +750,31 @@ public class ToolbarPanel {
                 			e.printStackTrace();
                 		}
                 	}
+                }).getNode();
+    }
+    
+    private Node reduceResolutionButton() {
+        return new ToolbarButton("Reduce Resolution", null,
+                actionEvent -> {
+                	CustomInputTextDialog dialog = new CustomInputTextDialog("Reduce Resolution", Arrays.asList(
+                            new Field("Size:", "3")));
+                	dialog.show();
+                	int size = dialog.getResult(0, Integer.class);
+                	imageManager.applyTransformation(new DecreaseResolutionTransformation(size));
+                }).getNode();
+    }
+    
+    private Node runExperimentsButton() {
+        return new ToolbarButton("Reduce Resolution", null,
+                actionEvent -> {
+                	try {
+                		SarExperiments experiments = new SarExperiments(imageManager);
+                		experiments.runResolution();
+//						experiments.runAlphaAndGamma();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
                 }).getNode();
     }
 

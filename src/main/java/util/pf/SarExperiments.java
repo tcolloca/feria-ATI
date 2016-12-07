@@ -16,7 +16,7 @@ import util.Statistics;
 
 public class SarExperiments {
 
-	private static final int EXPERIMENTS = 10;
+	private static final int EXPERIMENTS = 200;
 	private final ImageManager imageManager;
 
 	public SarExperiments(ImageManager imageManager) {
@@ -32,41 +32,41 @@ public class SarExperiments {
 		double alpha2 = -3;
 
 		double[] alphas = new double[] { -3, -4, -5, -10 };
-		double[] gammas = new double[] { 1, 10, 100, 1000 };
+		double[] gammas = new double[] { 0.1, 1, 10, 100, 1000 };
 		int[] Ls = new int[] { 1, 3, 5, 8 };
 
-		String shapesPath = "C:\\Users\\tomas\\OneDrive\\projects\\ATI-GUI-Desktop\\shape_original.jpg";
+		String shapesPath = "E:\\BACKUP Data\\Tom\\projects\\ATI-GUI-Desktop\\shape_original.png";
 		File shapesFile = new File(shapesPath);
 		File csvFile = new File("experiments.csv");
 		csvFile.createNewFile();
 		PrintWriter writer = new PrintWriter(csvFile);
 
-		for (double alpha : alphas) {
-			for (int L : Ls) {
-				writer.write(String.format("alpha=%g;gamma=%g;L=%d;\n", alpha, gamma2, L));
-				List<Double> goodMatches = new ArrayList<>();
-				List<Double> badMatches = new ArrayList<>();
-				for (int i = 0; i < EXPERIMENTS; i++) {
-					imageManager.setImageFile(shapesFile);
-					imageManager.createSyntheticImageFromOriginal(L, alpha1, gamma1, alpha, gamma2);
-					BufferedImage noiseImage = imageManager.getModifiableBufferedImage();
-					String noiseImagePath = String.format("shapes/shapes_%g_%g_%d_%d.png", alpha, gamma2, L, i);
-					FileHelper.saveImage(noiseImage, noiseImagePath);
-					int[] matches = SiftMatcher.match(shapesFile, new File(noiseImagePath));
-					badMatches.add((double) matches[0]);
-					goodMatches.add((double) matches[1]);
-				}
-				Statistics statsBad = new Statistics(badMatches.toArray(new Double[badMatches.size()]));
-				Statistics statsGood = new Statistics(goodMatches.toArray(new Double[goodMatches.size()]));
-				double badMatchesAvg = statsBad.getMean();
-				double goodMatchesAvg = statsGood.getMean();
-				double badMatchesStdev = statsBad.getStdDev();
-				double goodMatchesStdev = statsGood.getStdDev();
-
-				writer.write(String.format("%g;%g;%g;%g\n", badMatchesAvg, goodMatchesAvg, badMatchesStdev,
-						goodMatchesStdev));
-			}
-		}
+//		for (double alpha : alphas) {
+//			for (int L : Ls) {
+//				writer.write(String.format("alpha=%g;gamma=%g;L=%d;\n", alpha, gamma2, L));
+//				List<Double> goodMatches = new ArrayList<>();
+//				List<Double> badMatches = new ArrayList<>();
+//				for (int i = 0; i < EXPERIMENTS; i++) {
+//					imageManager.setImageFile(shapesFile);
+//					imageManager.createSyntheticImageFromOriginal(L, alpha1, gamma1, alpha, gamma2);
+//					BufferedImage noiseImage = imageManager.getModifiableBufferedImage();
+//					String noiseImagePath = String.format("shapes/shapes_%g_%g_%d_%d.png", alpha, gamma2, L, i);
+//					FileHelper.saveImage(noiseImage, noiseImagePath);
+//					int[] matches = SiftMatcher.match(shapesFile, new File(noiseImagePath));
+//					badMatches.add((double) matches[0]);
+//					goodMatches.add((double) matches[1]);
+//				}
+//				Statistics statsBad = new Statistics(badMatches.toArray(new Double[badMatches.size()]));
+//				Statistics statsGood = new Statistics(goodMatches.toArray(new Double[goodMatches.size()]));
+//				double badMatchesAvg = statsBad.getMean();
+//				double goodMatchesAvg = statsGood.getMean();
+//				double badMatchesStdev = statsBad.getStdDev();
+//				double goodMatchesStdev = statsGood.getStdDev();
+//
+//				writer.write(String.format("%g;%g;%g;%g\n", badMatchesAvg, goodMatchesAvg, badMatchesStdev,
+//						goodMatchesStdev));
+//			}
+//		}
 
 		for (double gamma : gammas) {
 			for (int L : Ls) {
@@ -93,15 +93,15 @@ public class SarExperiments {
 				writer.write(String.format("%g;%g;%g;%g\n", badMatchesAvg, goodMatchesAvg, badMatchesStdev,
 						goodMatchesStdev));
 			}
-			writer.close();
 		}
+		writer.close();
 	}
 
 	public void runResolution() throws IOException {
 
-		String munichPath = "C:\\Users\\tomas\\OneDrive\\projects\\ATI-GUI-Desktop\\munich.png";
+		String munichPath = "E:\\BACKUP Data\\Tom\\projects\\ATI-GUI-Desktop\\munich.png";
 		File munichFile = new File(munichPath);
-		String munichSlicePath = "C:\\Users\\tomas\\OneDrive\\projects\\ATI-GUI-Desktop\\munich_slice.png";
+		String munichSlicePath = "E:\\BACKUP Data\\Tom\\projects\\ATI-GUI-Desktop\\munich_slice.png";
 		File munichSliceFile = new File(munichSlicePath);
 		File csvFile = new File("experiments_res.csv");
 		csvFile.createNewFile();

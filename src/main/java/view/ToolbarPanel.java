@@ -738,9 +738,13 @@ public class ToolbarPanel {
     private Node recognizePlatesButton() {
         return new ToolbarButton("Recognize Plates", ToolbarImages.PLATES,
                 actionEvent -> {
-                	imageManager.getValueBand();
-                	Transformation PRT = new PlateRecognitionTransformation();
-                	imageManager.applyTransformation(PRT);
+//                	allPaths = FileHelper.allPathsInFolder();
+//                	for (String fileName : allPaths) {
+//                		imageManager.setImageFile(new File(fileName));
+                		imageManager.getValueBand();
+                		Transformation PRT = new PlateRecognitionTransformation();
+                		imageManager.applyTransformation(PRT);
+//                	}
                 }).getNode();
     }
     
@@ -761,7 +765,7 @@ public class ToolbarPanel {
                 	try {
                 		SarExperiments experiments = new SarExperiments(imageManager);
                 		experiments.runResolution();
-//						experiments.runAlphaAndGamma();
+						experiments.runAlphaAndGamma();
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

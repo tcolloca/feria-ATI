@@ -81,17 +81,6 @@ public class SarBand extends Band {
       }
     }
 
-    histogram = new double[buckets];
-    for (int i = 0; i < m.length; i++) {
-      for (int j = 0; j < m[0].length; j++) {
-        histogram[getBucket(newM[i][j], min, bucketSize)]++;
-      }
-    }
-
-    for (int i = 0; i < histogram.length; i++) {
-      histogram[i] = histogram[i]/count;
-    }
-
     return newM;
   }
 

@@ -1,21 +1,7 @@
 package model;
 
-import com.goodengineer.atibackend.ImageUtils;
-import com.goodengineer.atibackend.model.Band;
-import com.goodengineer.atibackend.model.ColorImage;
-import com.goodengineer.atibackend.transformation.Transformation;
-import com.goodengineer.atibackend.translator.Translator;
-import javafx.scene.image.Image;
-import javafx.util.Pair;
-import org.apache.commons.math3.distribution.GammaDistribution;
-import util.BufferedImageColorImageTranslator;
-import util.ColorHelper;
-import util.ImageEventDispatcher;
-import util.pf.SarBand;
-import util.pf.SarImage;
-import view.ImagePanel;
+import static util.pf.SarImageLoader.readSarImage;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -23,8 +9,33 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.DoubleStream;
+import java.util.stream.IntStream;
 
-import static util.pf.SarImageLoader.readSarImage;
+import javafx.scene.image.Image;
+import javafx.util.Pair;
+
+import javax.imageio.ImageIO;
+
+import org.apache.commons.math3.distribution.GammaDistribution;
+
+import util.BufferedImageColorImageTranslator;
+import util.ColorHelper;
+import util.ImageEventDispatcher;
+import util.pf.SarBand;
+import util.pf.SarImage;
+import view.ImagePanel;
+
+import com.goodengineer.atibackend.ImageUtils;
+import com.goodengineer.atibackend.model.Band;
+import com.goodengineer.atibackend.model.ColorImage;
+import com.goodengineer.atibackend.transformation.Transformation;
+import com.goodengineer.atibackend.translator.Translator;
+import com.goodengineer.atibackend.util.FilterUtils;
 
 public class ImageManager {
 
@@ -308,6 +319,56 @@ public class ImageManager {
     modifiableImage = (ColorImage) originalImage.clone();
     imagePanel.showOriginal();
     imagePanel.showModified();
+  }
+  
+  public Function<Double, Double> gioPdf(double L, double alpha, double gamma) {
+		GammaDistribution f = new GammaDistribution(L, L);
+	    GammaDistribution g = new GammaDistribution(-alpha, 1 / gamma);
+	    return new Function<Double, Double>() {
+	    	@Override
+	    	public Double apply(Double x) {
+	    		return f.density(x) / g.density(x);
+//	    		double gCumulativeProbability = g.cumulativeProbability(x);
+//	    		System.out.println(gCumulativeProbability * gCumulativeProbability);
+//	    		return (f.density(x) * gCumulativeProbability - g.density(x) * f.cumulativeProbability(x)) /
+//	    				(gCumulativeProbability * gCumulativeProbability);
+	    	}
+		};
+  }
+  
+  public Band getAlphasMap(int maskSize, int L) {
+	 int offset = maskSize - 1; 
+	 Band band = modifiableImage.getBands().get(0);
+	 double[] alphas = IntStream.rangeClosed(-40, -4).mapToDouble(x -> x / 2.0).toArray();
+	 
+	 double[][] alphasMap = new double[band.getWidth() - 2*offset][band.getHeight() - 2*offset];
+	 
+	 System.out.println(band.getWidth());
+	 System.out.println(band.getHeight());
+	 
+	 for (int x = offset; x < band.getWidth() - offset; x++) {
+		 for (int y = offset; y < band.getHeight() - offset; y++) {
+			 double[] pixelsArr = FilterUtils.getPixelsInMask(band, x, y, maskSize);
+			 double avg = DoubleStream.of(pixelsArr).average().getAsDouble();
+			 double max = Double.NEGATIVE_INFINITY;
+			 double alphaMax = 0;
+			 for (double alpha : alphas) {
+				 Function<Double, Double> gioPdf = gioPdf(L, alpha, -1 - alpha);
+				 double newVal = DoubleStream.of(pixelsArr)
+						 .map(v -> v / avg)
+						 .map(val -> gioPdf.apply(val)).reduce(1, (v1, v2) -> v1 * v2);
+				System.out.println(String.format("max: %f, newVal: %f", max, newVal));
+				if (max < newVal) {
+					 max = newVal;
+					 alphaMax = alpha;
+				 } 
+			 }
+			 System.out.println(String.format("x: %d, y: %d, alpha: %f", x, y, alphaMax));
+			 alphasMap[x - offset][y - offset] = alphaMax;
+		 } 
+	 }
+	 
+	 return new Band(alphasMap, "Gray");
   }
 
   public float[] createHistogram() {

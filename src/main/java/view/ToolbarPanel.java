@@ -136,7 +136,8 @@ public class ToolbarPanel {
         stopButton(),
         recognizePlatesButton(),
         reduceResolutionButton(),
-        runExperimentsButton());
+        runExperimentsButton(),
+        getAlphasMapButton());
 
     vBox.getChildren().add(hBox);
     vBox.getChildren().add(hFiltersBox);
@@ -773,6 +774,13 @@ public class ToolbarPanel {
                 }).getNode();
     }
 
+    private Node getAlphasMapButton() {
+        return new ToolbarButton("Alpha Map", null,
+                actionEvent -> {
+                	imageManager.getAlphasMap(11, 1);
+                }).getNode();
+    }
+    
   public Node getNode() {
     return vBox;
   }

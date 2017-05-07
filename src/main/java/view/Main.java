@@ -22,7 +22,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import model.ImageManager;
 
-import org.opencv.core.Core;
+//import org.opencv.core.Core;
 
 public class Main extends Application {
 
@@ -30,7 +30,7 @@ public class Main extends Application {
   private ImagePanel imagePanel;
 
   public static void main(String[] args) throws IOException {
-	System.loadLibrary( Core.NATIVE_LIBRARY_NAME );
+//	System.loadLibrary( Core.NATIVE_LIBRARY_NAME );
     Application.launch(args);
   }
   

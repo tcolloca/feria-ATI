@@ -22,6 +22,7 @@ import javafx.util.Pair;
 import javax.imageio.ImageIO;
 
 import org.apache.commons.math3.distribution.GammaDistribution;
+import org.apache.commons.math3.special.Gamma;
 
 import util.BufferedImageColorImageTranslator;
 import util.ColorHelper;
@@ -322,18 +323,13 @@ public class ImageManager {
   }
   
   public Function<Double, Double> gioPdf(double L, double alpha, double gamma) {
-		GammaDistribution f = new GammaDistribution(L, L);
-	    GammaDistribution g = new GammaDistribution(-alpha, 1 / gamma);
-	    return new Function<Double, Double>() {
-	    	@Override
-	    	public Double apply(Double x) {
-	    		return f.density(x) / g.density(x);
-//	    		double gCumulativeProbability = g.cumulativeProbability(x);
-//	    		System.out.println(gCumulativeProbability * gCumulativeProbability);
-//	    		return (f.density(x) * gCumulativeProbability - g.density(x) * f.cumulativeProbability(x)) /
-//	    				(gCumulativeProbability * gCumulativeProbability);
-	    	}
-		};
+    return new Function<Double, Double>() {
+    	@Override
+    	public Double apply(Double x) {
+    		return (Math.pow(L, L) * Gamma.gamma(L - alpha) * Math.pow(x, L - 1))
+    			/ (Math.pow(gamma, alpha) * Gamma.gamma(-alpha) * Gamma.gamma(L) * Math.pow(gamma + x * L, L - alpha)); 
+    	}
+	};
   }
   
   public Band getAlphasMap(int maskSize, int L) {

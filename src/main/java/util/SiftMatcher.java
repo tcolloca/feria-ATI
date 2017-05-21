@@ -115,54 +115,54 @@ public class SiftMatcher {
 	          System.out.println("Object Not Found");
 	      }
 //
-//	          List<KeyPoint> objKeypointlist = objectKeyPoints.toList();
-//	          List<KeyPoint> scnKeypointlist = sceneKeyPoints.toList();
-//
-//	          LinkedList<Point> objectPoints = new LinkedList<>();
-//	          LinkedList<Point> scenePoints = new LinkedList<>();
-//
-//	          for (int i = 0; i < goodMatchesList.size(); i++) {
-//	              objectPoints.addLast(objKeypointlist.get(goodMatchesList.get(i).queryIdx).pt);
-//	              scenePoints.addLast(scnKeypointlist.get(goodMatchesList.get(i).trainIdx).pt);
-//	          }
-//
-//	          MatOfPoint2f objMatOfPoint2f = new MatOfPoint2f();
-//	          objMatOfPoint2f.fromList(objectPoints);
-//	          MatOfPoint2f scnMatOfPoint2f = new MatOfPoint2f();
-//	          scnMatOfPoint2f.fromList(scenePoints);
-//
-//	          Mat homography = Calib3d.findHomography(objMatOfPoint2f, scnMatOfPoint2f, Calib3d.RANSAC, 3);
-//
-//	          Mat obj_corners = new Mat(4, 1, CvType.CV_32FC2);
-//	          Mat scene_corners = new Mat(4, 1, CvType.CV_32FC2);
-//
-//	          obj_corners.put(0, 0, new double[]{0, 0});
-//	          obj_corners.put(1, 0, new double[]{objectImage.cols(), 0});
-//	          obj_corners.put(2, 0, new double[]{objectImage.cols(), objectImage.rows()});
-//	          obj_corners.put(3, 0, new double[]{0, objectImage.rows()});
-//
-//	          System.out.println("Transforming object corners to scene corners...");
-//	          Core.perspectiveTransform(obj_corners, scene_corners, homography);
-//
-//	          Mat img = Highgui.imread(scenePath, Highgui.CV_LOAD_IMAGE_COLOR);
-//
-//	          Core.line(img, new Point(scene_corners.get(0, 0)), new Point(scene_corners.get(1, 0)), new Scalar(0, 255, 0), 4);
-//	          Core.line(img, new Point(scene_corners.get(1, 0)), new Point(scene_corners.get(2, 0)), new Scalar(0, 255, 0), 4);
-//	          Core.line(img, new Point(scene_corners.get(2, 0)), new Point(scene_corners.get(3, 0)), new Scalar(0, 255, 0), 4);
-//	          Core.line(img, new Point(scene_corners.get(3, 0)), new Point(scene_corners.get(0, 0)), new Scalar(0, 255, 0), 4);
-//
-//	          System.out.println("Drawing matches image...");
-//	          MatOfDMatch goodMatches = new MatOfDMatch();
-//	          goodMatches.fromList(goodMatchesList);
-//
-//	          Features2d.drawMatches(objectImage, objectKeyPoints, sceneImage, sceneKeyPoints, goodMatches, matchoutput, matchestColor, newKeypointColor, new MatOfByte(), 2);
-//
-//	          Highgui.imwrite("matchoutput.jpg", matchoutput);
-//
-//	      String filename = "keypoints.jpg";
-//	      Highgui.imwrite(filename, outputImage);
-//
-//	      System.out.println("Ended....");
+	          List<KeyPoint> objKeypointlist = objectKeyPoints.toList();
+	          List<KeyPoint> scnKeypointlist = sceneKeyPoints.toList();
+
+	          LinkedList<Point> objectPoints = new LinkedList<>();
+	          LinkedList<Point> scenePoints = new LinkedList<>();
+
+	          for (int i = 0; i < goodMatchesList.size(); i++) {
+	              objectPoints.addLast(objKeypointlist.get(goodMatchesList.get(i).queryIdx).pt);
+	              scenePoints.addLast(scnKeypointlist.get(goodMatchesList.get(i).trainIdx).pt);
+	          }
+
+	          MatOfPoint2f objMatOfPoint2f = new MatOfPoint2f();
+	          objMatOfPoint2f.fromList(objectPoints);
+	          MatOfPoint2f scnMatOfPoint2f = new MatOfPoint2f();
+	          scnMatOfPoint2f.fromList(scenePoints);
+
+	          Mat homography = Calib3d.findHomography(objMatOfPoint2f, scnMatOfPoint2f, Calib3d.RANSAC, 3);
+
+	          Mat obj_corners = new Mat(4, 1, CvType.CV_32FC2);
+	          Mat scene_corners = new Mat(4, 1, CvType.CV_32FC2);
+
+	          obj_corners.put(0, 0, new double[]{0, 0});
+	          obj_corners.put(1, 0, new double[]{objectImage.cols(), 0});
+	          obj_corners.put(2, 0, new double[]{objectImage.cols(), objectImage.rows()});
+	          obj_corners.put(3, 0, new double[]{0, objectImage.rows()});
+
+	          System.out.println("Transforming object corners to scene corners...");
+	          Core.perspectiveTransform(obj_corners, scene_corners, homography);
+
+	          Mat img = Highgui.imread(scenePath, Highgui.CV_LOAD_IMAGE_COLOR);
+
+	          Core.line(img, new Point(scene_corners.get(0, 0)), new Point(scene_corners.get(1, 0)), new Scalar(0, 255, 0), 4);
+	          Core.line(img, new Point(scene_corners.get(1, 0)), new Point(scene_corners.get(2, 0)), new Scalar(0, 255, 0), 4);
+	          Core.line(img, new Point(scene_corners.get(2, 0)), new Point(scene_corners.get(3, 0)), new Scalar(0, 255, 0), 4);
+	          Core.line(img, new Point(scene_corners.get(3, 0)), new Point(scene_corners.get(0, 0)), new Scalar(0, 255, 0), 4);
+
+	          System.out.println("Drawing matches image...");
+	          MatOfDMatch goodMatches = new MatOfDMatch();
+	          goodMatches.fromList(goodMatchesList);
+
+	          Features2d.drawMatches(objectImage, objectKeyPoints, sceneImage, sceneKeyPoints, goodMatches, matchoutput, matchestColor, newKeypointColor, new MatOfByte(), 2);
+
+	          Highgui.imwrite("matchoutput.jpg", matchoutput);
+
+	      String filename = "keypoints.jpg";
+	      Highgui.imwrite(filename, outputImage);
+
+	      System.out.println("Ended....");
 	      System.out.println(Arrays.toString(new int[]{rawMatchesAmount, goodMatchesAmount}));
 	      return new int[] {rawMatchesAmount, goodMatchesAmount};
 	  }

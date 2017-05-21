@@ -6,13 +6,11 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 
@@ -305,7 +303,7 @@ public class ImageManager {
     GammaDistribution y1Var = new GammaDistribution(-alpha1, 1 / gamma1);
     GammaDistribution y2Var = new GammaDistribution(-alpha2, 1 / gamma2);
 
-    double[][] pixels = new double[200][200];
+    double[][] pixels = new double[originalImage.getWidth()][originalImage.getHeight()];
     for (int x = 0; x < originalImage.getWidth(); x++) {
       for (int y = 0; y < originalImage.getHeight(); y++) {
         if (originalImage.getGray(x, y) == 255) {
@@ -315,7 +313,6 @@ public class ImageManager {
         }
       }
     }
-
     originalImage = new SarImage(new SarBand(pixels, "Gray"));
     modifiableImage = (ColorImage) originalImage.clone();
     imagePanel.showOriginal();
@@ -332,39 +329,74 @@ public class ImageManager {
 	};
   }
   
-  public Band getAlphasMap(int maskSize, int L) {
+	public void getAlphasMap(int maskSize, int L) {
 	 int offset = maskSize - 1; 
+	 int jump = 10;
 	 Band band = modifiableImage.getBands().get(0);
+	 System.out.println(band.getRawPixel(0, 0));
 	 double[] alphas = IntStream.rangeClosed(-40, -4).mapToDouble(x -> x / 2.0).toArray();
+	 int alphaWidth = band.getWidth() - 2*offset;
+	 int alphaHeight = band.getHeight() - 2*offset;
+	 double[][] alphasMap = new double[alphaWidth][alphaHeight];
+	
+	 FileWriter f = null;
+	try {
+		f = new FileWriter(new File("alphas_map.csv"));
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
 	 
-	 double[][] alphasMap = new double[band.getWidth() - 2*offset][band.getHeight() - 2*offset];
-	 
-	 System.out.println(band.getWidth());
-	 System.out.println(band.getHeight());
-	 
-	 for (int x = offset; x < band.getWidth() - offset; x++) {
-		 for (int y = offset; y < band.getHeight() - offset; y++) {
-			 double[] pixelsArr = FilterUtils.getPixelsInMask(band, x, y, maskSize);
-			 double avg = DoubleStream.of(pixelsArr).average().getAsDouble();
+	 for (int x = offset; x < band.getWidth() - offset; x+= jump) {
+		 for (int y = offset; y < band.getHeight() - offset; y += jump) {
+			 double[] pixelsArr = FilterUtils.getRawPixelsInMask(band, x, y, maskSize);
+			 double avg = DoubleStream.of(pixelsArr).average().getAsDouble() + 0.0005;
 			 double max = Double.NEGATIVE_INFINITY;
 			 double alphaMax = 0;
 			 for (double alpha : alphas) {
 				 Function<Double, Double> gioPdf = gioPdf(L, alpha, -1 - alpha);
 				 double newVal = DoubleStream.of(pixelsArr)
-						 .map(v -> v / avg)
-						 .map(val -> gioPdf.apply(val)).reduce(1, (v1, v2) -> v1 * v2);
-				System.out.println(String.format("max: %f, newVal: %f", max, newVal));
-				if (max < newVal) {
+						 .map(v -> (v + 0.0005) / avg)
+						 .map(val -> gioPdf.apply(val)).reduce(0, (v1, v2) -> {
+							 return v1 + Math.log(v2);});
+				 if (x == 50 && y == 110) {
+					 try {
+						f.write(String.format("%f;%f\n", alpha, newVal));
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				 }
+				 if (max < newVal) {
 					 max = newVal;
 					 alphaMax = alpha;
 				 } 
 			 }
+			 if (x == 50 && y == 110) {
+				 try {
+					f.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			 }
 			 System.out.println(String.format("x: %d, y: %d, alpha: %f", x, y, alphaMax));
-			 alphasMap[x - offset][y - offset] = alphaMax;
+			 for (int k = x - offset - jump/2; k < x - offset + jump/2; k++) {
+				 if (k >= 0 && k < alphaWidth) {
+					 for (int h = y - offset - jump/2; h < y + jump/2; h++) {
+						 if (h >= 0 && h < alphaHeight) {
+							 alphasMap[k][h] = alphaMax;
+						 }
+					 }
+			 	}
+			 }
 		 } 
 	 }
 	 
-	 return new Band(alphasMap, "Gray");
+	 originalImage = new SarImage(new SarBand(alphasMap, "Gray"));
+	 modifiableImage = (ColorImage) originalImage.clone();
+	 imagePanel.showOriginal();
+	 imagePanel.showModified();
   }
 
   public float[] createHistogram() {

@@ -331,7 +331,7 @@ public class ImageManager {
   
 	public void getAlphasMap(int maskSize, int L) {
 	 int offset = maskSize - 1; 
-	 int jump = 10;
+	 int jump = 5;
 	 Band band = modifiableImage.getBands().get(0);
 	 System.out.println(band.getRawPixel(0, 0));
 	 double[] alphas = IntStream.rangeClosed(-40, -4).mapToDouble(x -> x / 2.0).toArray();

@@ -381,7 +381,7 @@ public class ImageManager {
 				}
 			 }
 			 System.out.println(String.format("x: %d, y: %d, alpha: %f", x, y, alphaMax));
-			 for (int k = x - offset - jump/2; k < x - offset + jump/2; k++) {
+			 for (int k = x - offset - jump/2; k < x + jump/2; k++) {
 				 if (k >= 0 && k < alphaWidth) {
 					 for (int h = y - offset - jump/2; h < y + jump/2; h++) {
 						 if (h >= 0 && h < alphaHeight) {

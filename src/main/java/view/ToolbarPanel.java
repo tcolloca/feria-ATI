@@ -777,7 +777,7 @@ public class ToolbarPanel {
     private Node getAlphasMapButton() {
         return new ToolbarButton("Alpha Map", null,
                 actionEvent -> {
-                	imageManager.getAlphasMap(51, 1);
+                	imageManager.getAlphasMap(25, 1);
                 }).getNode();
     }
     

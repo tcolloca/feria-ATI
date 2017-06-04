@@ -354,11 +354,12 @@ public class ImageManager {
 			 double max = Double.NEGATIVE_INFINITY;
 			 double alphaMax = 0;
 			 for (double alpha : alphas) {
-				 Function<Double, Double> gioPdf = gioPdf(L, alpha, -1 - alpha);
+				 Function<Double, Double> gioPdf = gioPdf(L, alpha, -alpha);
 				 double newVal = DoubleStream.of(pixelsArr)
 						 .map(v -> (v + 0.0005) / avg)
 						 .map(val -> gioPdf.apply(val)).reduce(0, (v1, v2) -> {
 							 return v1 + Math.log(v2);});
+				 System.out.println(newVal);
 				 if (x == 50 && y == 110) {
 					 try {
 						f.write(String.format("%f;%f\n", alpha, newVal));

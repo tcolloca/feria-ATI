@@ -765,7 +765,7 @@ public class ToolbarPanel {
                 actionEvent -> {
                 	try {
                 		SarExperiments experiments = new SarExperiments(imageManager);
-                		experiments.runResolution();
+//                		experiments.runResolution();
 						experiments.runAlphaAndGamma();
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
@@ -777,7 +777,7 @@ public class ToolbarPanel {
     private Node getAlphasMapButton() {
         return new ToolbarButton("Alpha Map", null,
                 actionEvent -> {
-                	imageManager.getAlphasMap(25, 1);
+                	imageManager.getAlphasMap(51, 8);
                 }).getNode();
     }
     

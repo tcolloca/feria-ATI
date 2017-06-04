@@ -26,7 +26,7 @@ public class ImagePanel extends ImageEventAdapter {
   private final double maxWidth = ViewConstants.MAIN_MIN_WIDTH - 50;
   private final double maxHeight = ViewConstants.IMAGE_MIN_HEIGHT - 20;
 
-  ImagePanel(ImageManager imageManager) {
+  protected ImagePanel(ImageManager imageManager) {
     this.imageManager = imageManager;
 
     originalImageView = new ImageView();

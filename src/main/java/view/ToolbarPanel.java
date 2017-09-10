@@ -3,12 +3,32 @@ package view;
 import static view.ViewConstants.TOOLBAR_SPACING;
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 
+import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+
 import javax.imageio.ImageIO;
+
+import model.ImageManager;
+import util.BufferedImageColorImageTranslator;
+import util.FileHelper;
+import util.SiftMatcher;
+import util.ToolbarImages;
+import util.pf.SarExperiments;
 
 import com.goodengineer.atibackend.model.ColorImage;
 import com.goodengineer.atibackend.plates.PlateRecognitionTransformation;
@@ -51,17 +71,6 @@ import com.goodengineer.atibackend.transformation.threshold.ThresholdingTransfor
 import com.goodengineer.atibackend.util.MaskFactory;
 import com.goodengineer.atibackend.util.MaskFactory.Direction;
 import com.goodengineer.atibackend.video.ObjectTracker;
-
-import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import model.ImageManager;
-import util.BufferedImageColorImageTranslator;
-import util.FileHelper;
-import util.SiftMatcher;
-import util.ToolbarImages;
-import util.pf.SarExperiments;
 
 public class ToolbarPanel {
 
@@ -137,7 +146,8 @@ public class ToolbarPanel {
         recognizePlatesButton(),
         reduceResolutionButton(),
         runExperimentsButton(),
-        getAlphasMapButton());
+        getAlphasMapButton(),
+        captchaButton());
 
     vBox.getChildren().add(hBox);
     vBox.getChildren().add(hFiltersBox);
@@ -763,11 +773,11 @@ public class ToolbarPanel {
     private Node runExperimentsButton() {
         return new ToolbarButton("Reduce Resolution", null,
                 actionEvent -> {
-                	try {
-                		SarExperiments experiments = new SarExperiments(imageManager);
+                	SarExperiments experiments = new SarExperiments(imageManager);
 //                		experiments.runResolution();
+					try {
 						experiments.runAlphaAndGamma();
-					} catch (IOException e) {
+					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
@@ -779,6 +789,44 @@ public class ToolbarPanel {
                 actionEvent -> {
                 	imageManager.getAlphasMap(51, 8);
                 }).getNode();
+    }
+    
+    private Node captchaButton() {
+    	return new ToolbarButton("Captcha", null,
+                actionEvent -> {
+        HttpURLConnection conn;
+		try {
+			
+			
+			
+			conn = (HttpURLConnection) new URL("http://www.neopets.com/captcha_show.phtml?_x_pwned=56d33763ff6e43a900f4dbe3a5c60abc").openConnection();
+	    	int bytes = conn.getContentLength();
+	    	System.out.println(bytes);
+	    	InputStream in = conn.getInputStream();
+			@SuppressWarnings("resource")
+			BufferedInputStream br = new BufferedInputStream(in);
+			
+			byte[] img = new byte[1024*1024*1024];
+			byte[] buff = new byte[1024];
+			
+			int index = 0;
+			int n = 0;
+			while ((n = br.read(buff)) != -1) {
+				System.arraycopy(buff, 0, img, index, n);
+				index += n;
+			}
+			
+			BufferedImage bImageFromConvert = ImageIO.read(new ByteArrayInputStream(img));
+
+			ImageIO.write(bImageFromConvert, "jpeg", new File("new-darksouls.jpeg"));
+
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}}).getNode();
     }
     
   public Node getNode() {

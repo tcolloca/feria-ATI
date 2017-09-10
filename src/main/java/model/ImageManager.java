@@ -14,20 +14,10 @@ import java.util.function.Function;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 
-import javafx.scene.image.Image;
-import javafx.util.Pair;
-
 import javax.imageio.ImageIO;
 
 import org.apache.commons.math3.distribution.GammaDistribution;
 import org.apache.commons.math3.special.Gamma;
-
-import util.BufferedImageColorImageTranslator;
-import util.ColorHelper;
-import util.ImageEventDispatcher;
-import util.pf.SarBand;
-import util.pf.SarImage;
-import view.ImagePanel;
 
 import com.goodengineer.atibackend.ImageUtils;
 import com.goodengineer.atibackend.model.Band;
@@ -35,6 +25,15 @@ import com.goodengineer.atibackend.model.ColorImage;
 import com.goodengineer.atibackend.transformation.Transformation;
 import com.goodengineer.atibackend.translator.Translator;
 import com.goodengineer.atibackend.util.FilterUtils;
+
+import javafx.scene.image.Image;
+import javafx.util.Pair;
+import util.BufferedImageColorImageTranslator;
+import util.ColorHelper;
+import util.ImageEventDispatcher;
+import util.pf.SarBand;
+import util.pf.SarImage;
+import view.ImagePanel;
 
 public class ImageManager {
 
@@ -63,6 +62,7 @@ public class ImageManager {
       if (fileName.endsWith(".flt") || fileName.endsWith(".img")) {
         setSarImageFile(imageFile, 1, 1, "");
       } else {
+    	
         BufferedImage bufferedImage = ImageIO.read(imageFile);
         isGrayScale = false;
         originalImage = translator.translateForward(bufferedImage);
@@ -71,7 +71,6 @@ public class ImageManager {
         imagePanel.showOriginal();
       }
     } catch (IOException e) {
-      // TODO: Auto-generated code.
       e.printStackTrace();
     }
   }

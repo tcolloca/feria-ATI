@@ -21,7 +21,9 @@ public class SarImageLoader {
   public static ColorImage readSarImage(File file, int reducerWidth, int reducerHeight,
       String type) throws IOException {
     byte[] bytes;
+    System.out.println(file.getAbsolutePath());
     bytes = Files.toByteArray(file);
+    System.out.println(bytes.length);
     String hdrFile;
     String absPath = file.getAbsolutePath();
     if (fileExists(absPath.concat(".hdr"))) {
@@ -34,6 +36,9 @@ public class SarImageLoader {
     int height = params.get("lines", Integer.class);
     int dataType = params.get("data type", Integer.class);
     int byteOrder = params.get("byte order", Integer.class);
+    
+    System.out.println(String.format("h : %d, w: %d", height, width));
+    
     double[][] m = new double[width][height];
     for (int l = 0; l < height; l++) {
       for (int s = 0; s < width; s++) {
@@ -76,7 +81,9 @@ public class SarImageLoader {
     for (int i = 0; i < numsAmount; i++) {
       for (int b = 0; b < bytesAmount; b++) {
         int offset = numsAmount * bytesAmount;
-        nums[i][b] = bytes[l * width * offset + s * offset + i * offset + b];
+        int n = l * width * offset + s * offset + i * bytesAmount + b;
+        if (n > 51168008 - 11) System.out.println(n + 8);
+        nums[i][b] = bytes[8 + l * width * offset + s * offset + i * bytesAmount + b];
       }
     }
     ByteOrder order = byteOrder == 0 ? ByteOrder.LITTLE_ENDIAN : ByteOrder.BIG_ENDIAN;

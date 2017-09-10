@@ -4,13 +4,17 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
 import model.ImageManager;
 import util.FileHelper;
@@ -21,7 +25,7 @@ import com.goodengineer.atibackend.transformation.DecreaseResolutionTransformati
 
 public class SarExperiments {
 
-	private static final int EXPERIMENTS = 400;
+	private static final int EXPERIMENTS = 51;
 	private final ImageManager imageManager;
 
 	public SarExperiments(ImageManager imageManager) {
@@ -30,7 +34,7 @@ public class SarExperiments {
 	}
 	
 	public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
-		new SarExperiments(null).runAlphaAndGamma();
+		new SarExperiments(null).runResolution2();
 	}
 
 	private static class ImagePanelMock extends ImagePanel {
@@ -63,7 +67,7 @@ public class SarExperiments {
 		for (double alpha : alphas) {
 			for (int L : Ls) {
 				for (int i = 0; i < EXPERIMENTS; i++) {
-					completionService.submit(new MyRunnable(shapesFile, alpha1, gamma1, alpha, gamma2, L, i));
+					completionService.submit(new AlphaGammaExpRunnable(shapesFile, alpha1, gamma1, alpha, gamma2, L, i));
 				}
 			}
 		}
@@ -71,7 +75,7 @@ public class SarExperiments {
 		for (double gamma : gammas) {
 			for (int L : Ls) {
 				for (int i = 0; i < EXPERIMENTS; i++) {
-					completionService.submit(new MyRunnable(shapesFile, alpha1, gamma1, alpha2, gamma, L, i));
+					completionService.submit(new AlphaGammaExpRunnable(shapesFile, alpha1, gamma1, alpha2, gamma, L, i));
 				}
 			}
 		}
@@ -82,6 +86,26 @@ public class SarExperiments {
 			System.out.println("Finished: " + completionService.take().get());
 		}
 		
+		executor.shutdown();
+	}
+	
+	public void runResol() throws IOException, InterruptedException, ExecutionException {
+
+		int[] resolutions = new int[] { 2, 4, 8, 16 };
+
+		String shapesPath = "E:\\BACKUPData\\Tom\\projects\\ATI-GUI-Desktop\\selected_shapes\\shapes_a1=-1,5_g1=1,0_a2=-20,0_g2=1,0_L=8_i=%d.png";
+
+		ExecutorService executor = Executors.newFixedThreadPool(5);
+		CompletionService<String> completionService = new ExecutorCompletionService<>(executor);
+		System.out.println("exec created");
+		
+		for (int resolution: resolutions) {
+			for (int i = 0; i < EXPERIMENTS; i++) {
+				File shapesFile = new File(String.format(shapesPath, i));
+				completionService.submit(new ResolExpRunnable(shapesFile, resolution, i));
+			}
+		}
+
 		executor.shutdown();
 	}
 
@@ -109,7 +133,30 @@ public class SarExperiments {
 		writer.close();
 	}
 	
-	public class MyRunnable implements Callable<String> {
+	public void runResolution2() throws IOException {
+		Path dir = Paths.get("E:\\BACKUPData\\Tom\\projects\\ATI-GUI-Desktop\\");
+		List<Path> paths = Files.list(dir)
+				.filter(p -> {
+					return p.toString().endsWith(".png") && p.getFileName().toString().startsWith("img");
+				})
+				.collect(Collectors.toList());
+		
+		int[] resolutions = new int[] { 2, 4, 8, 16 };
+		
+		for (Path path : paths) {
+			for (int resolution: resolutions) {
+				ImageManager imageManager = new ImageManager();
+				new ImagePanelMock(imageManager);
+				imageManager.setImageFile(path.toFile());
+				imageManager.applyTransformation(new DecreaseResolutionTransformation(resolution));
+				BufferedImage newImage = imageManager.getModifiableBufferedImage();
+				String newImagePath = String.format("real_imgs/" + path.getFileName().toString().split("\\.")[0] + "_res" + resolution, resolution, path.getFileName().toString());
+				FileHelper.saveImage(newImage, newImagePath);
+			}
+		}
+	}
+	
+	public class AlphaGammaExpRunnable implements Callable<String> {
 		private final File shapesFile;
 		private final double a1;
 		private final double g1;
@@ -118,7 +165,7 @@ public class SarExperiments {
 		private final int L;
 		private final int i;
 
-		public MyRunnable(File shapesFile, double a1, double g1, double a2, double g2, int l, int i) {
+		public AlphaGammaExpRunnable(File shapesFile, double a1, double g1, double a2, double g2, int l, int i) {
 			super();
 			this.shapesFile = shapesFile;
 			this.a1 = a1;
@@ -141,6 +188,33 @@ public class SarExperiments {
 			System.out.println("saving " + noiseImagePath);
 			FileHelper.saveImage(noiseImage, noiseImagePath);
 			return noiseImagePath;
+		}
+		
+		
+	}
+	
+	public class ResolExpRunnable implements Callable<String> {
+		private final File shapesFile;
+		private final int resolution;
+		private final int i;
+
+		public ResolExpRunnable(File shapesFile, int resolution, int i) {
+			super();
+			this.shapesFile = shapesFile;
+			this.resolution = resolution;
+			this.i = i;
+		}
+
+		@Override
+		public String call() {
+			ImageManager imageManager = new ImageManager();
+			new ImagePanelMock(imageManager);
+			imageManager.setImageFile(shapesFile);
+			imageManager.applyTransformation(new DecreaseResolutionTransformation(resolution));
+			BufferedImage newImage = imageManager.getModifiableBufferedImage();
+			String newImagePath = String.format("resolutions/res_%d_%d.png", resolution, i);
+			FileHelper.saveImage(newImage, newImagePath);
+			return shapesFile.getPath();
 		}
 		
 		

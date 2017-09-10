@@ -10,7 +10,7 @@ public final class ViewConstants {
   public static final int MAIN_MIN_HEIGHT = 600/2;
 
   public static final int IMAGE_MIN_HEIGHT = 470/2 + 270;
-  public static final int INFO_MIN_HEIGHT = 100/2;
+  public static final int INFO_MIN_HEIGHT = 50;
   public static final int TOOLBAR_MIN_HEIGHT = MAIN_MIN_HEIGHT - IMAGE_MIN_HEIGHT - INFO_MIN_HEIGHT;
 
   public static final int FILE_CHOOSER_WIDTH = 900;

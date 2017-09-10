@@ -69,7 +69,7 @@ public class FileHelper {
 
   private static Optional<File> getFile() {
     JFileChooser fileChooser = getFileChooser();
-    fileChooser.setCurrentDirectory(new File("C:/Users/tomas/OneDrive/projects/ATI-GUI-Desktop"));
+    fileChooser.setCurrentDirectory(new File("./plates"));
     int status = fileChooser.showOpenDialog(null);
     if (status == JFileChooser.APPROVE_OPTION) {
       File file = fileChooser.getSelectedFile();

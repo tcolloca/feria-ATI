@@ -222,6 +222,9 @@ public class Band {
 		minY = Math.max(0, minY);
 		maxX = Math.min(getWidth() - 1, maxX);
 		maxY = Math.min(getHeight() - 1, maxY);
+		if (minX > maxX || minY > maxY) {
+			return null;
+		}
 		double[][] subPixels = new double[maxX - minX + 1][maxY - minY + 1];
 		for (int x = minX; x <= maxX; x++) {
 			for (int y = minY; y <= maxY; y++) {
@@ -229,5 +232,23 @@ public class Band {
 			}
 		}
 		return new Band(subPixels);
+	}
+	
+	public Band newBlack() {
+		return newColor(0);
+	}
+	
+	public Band newWhite() {
+		return newColor(255);
+	}
+	
+	public Band newColor(int color) {
+		Band cloned = this.clone();
+		for (int x = 0; x < cloned.getWidth(); x++) {
+			for (int y = 0; y < cloned.getHeight(); y++) {
+				cloned.setPixel(x, y, color);
+			}
+		}
+		return cloned;
 	}
 }

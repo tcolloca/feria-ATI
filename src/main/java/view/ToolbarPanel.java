@@ -40,13 +40,11 @@ public class ToolbarPanel {
 
 	private Node recognizePlatesButton() {
 		return new ToolbarButton("Recognize Plates", ToolbarImages.PLATES, actionEvent -> {
-			// allPaths = FileHelper.allPathsInFolder();
-			// for (String fileName : allPaths) {
-			// imageManager.setImageFile(new File(fileName));
-			imageManager.getValueBand();
-			Transformation PRT = new PlateRecognitionTransformation();
-			imageManager.applyTransformation(PRT);
-			// }
+			new Thread(() -> {
+				imageManager.getValueBand();
+				Transformation PRT = new PlateRecognitionTransformation(imageManager, infoPanel);
+				imageManager.applyTransformation(PRT);
+			}).start();
 		}).getNode();
 	}
 

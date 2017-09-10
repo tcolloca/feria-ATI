@@ -58,9 +58,6 @@ public class CircleHoughTransformation implements Transformation {
 			for (int heightIndex = 0; heightIndex < heightCount; heightIndex++) {
 				for (int radiusIndex = 0; radiusIndex < radiusCount; radiusIndex++) {
 					if (acum[widthIndex][heightIndex][radiusIndex] > threshold) {
-						System.out.println(String.format("w: %g, h: %g; r: %g, #: %d", 
-								getWidth(widthIndex, band), getHeight(heightIndex, band), 
-								getRadius(radiusIndex), acum[widthIndex][heightIndex][radiusIndex]));
 						drawCircle(getWidth(widthIndex, band), getHeight(heightIndex, band), 
 								getRadius(radiusIndex), band);
 					}

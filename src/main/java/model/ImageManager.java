@@ -1,38 +1,26 @@
 package model;
 
-import static util.pf.SarImageLoader.readSarImage;
-
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
-import java.util.stream.DoubleStream;
-import java.util.stream.IntStream;
 
 import javax.imageio.ImageIO;
-
-import org.apache.commons.math3.distribution.GammaDistribution;
-import org.apache.commons.math3.special.Gamma;
 
 import com.goodengineer.atibackend.ImageUtils;
 import com.goodengineer.atibackend.model.Band;
 import com.goodengineer.atibackend.model.ColorImage;
 import com.goodengineer.atibackend.transformation.Transformation;
 import com.goodengineer.atibackend.translator.Translator;
-import com.goodengineer.atibackend.util.FilterUtils;
 
 import javafx.scene.image.Image;
 import javafx.util.Pair;
 import util.BufferedImageColorImageTranslator;
 import util.ColorHelper;
 import util.ImageEventDispatcher;
-import util.pf.SarBand;
-import util.pf.SarImage;
 import view.ImagePanel;
 
 public class ImageManager {
@@ -59,30 +47,13 @@ public class ImageManager {
   public void setImageFile(File imageFile) {
     try {
       String fileName = imageFile.getAbsolutePath();
-      if (fileName.endsWith(".flt") || fileName.endsWith(".img")) {
-        setSarImageFile(imageFile, 1, 1, "");
-      } else {
-    	
         BufferedImage bufferedImage = ImageIO.read(imageFile);
         isGrayScale = false;
         originalImage = translator.translateForward(bufferedImage);
         modifiableImage = (ColorImage) originalImage.clone();
         transformations.clear();
         imagePanel.showOriginal();
-      }
     } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
-  
-  public void setSarImageFile(File imageFile, int reducerWidth, int reducerHeight, String type) {
-    try {
-      originalImage = readSarImage(imageFile, reducerWidth, reducerHeight, type);
-      modifiableImage = (ColorImage) originalImage.clone();
-      transformations.clear();
-      imagePanel.showOriginal();
-    } catch (IOException e) {
-      // TODO: Auto-generated code.
       e.printStackTrace();
     }
   }
@@ -116,7 +87,6 @@ public class ImageManager {
         break;
     }
     transformations.add(new Pair<>(transformation, bandType));
-    imagePanel.showModified();
   }
 
   public void undo() {
@@ -135,7 +105,6 @@ public class ImageManager {
     for (Pair<Transformation, BandType> pair : oldTransformations) {
       applyTransformation(pair.getKey(), pair.getValue());
     }
-    imagePanel.showModified();
   }
 
   public void checkPixelsColor(int x, int y, int width, int height) {
@@ -270,133 +239,14 @@ public class ImageManager {
   public com.goodengineer.atibackend.model.Image getModifiableBackendImage() {
 	  return modifiableImage;
   }
+
+  public void update(Band band) {
+	  modifiableImage = new ColorImage(band, band, band);
+	  refresh();
+  }
   
   public void refresh() {
 	  imagePanel.showModified();
-  }
-  
-  public void createSyntheticImage(double L, double alpha1, double gamma1, double alpha2, double gamma2) {
-	GammaDistribution xVar = new GammaDistribution(L, L);
-    GammaDistribution y1Var = new GammaDistribution(-alpha1, 1 / gamma1);
-    GammaDistribution y2Var = new GammaDistribution(-alpha2, 1 / gamma2);
-
-    double[][] pixels = new double[200][200];
-    for (int x = 0; x < 200; x++) {
-      for (int y = 0; y < 200; y++) {
-        if (Math.max(Math.abs(x - 100), Math.abs(y - 100)) < RADIUS) {
-          pixels[x][y] = xVar.sample() / y1Var.sample();
-        } else {
-          pixels[x][y] = xVar.sample() / y2Var.sample();
-        }
-      }
-    }
-
-    originalImage = new SarImage(new SarBand(pixels, "Gray"));
-    modifiableImage = (ColorImage) originalImage.clone();
-    imagePanel.showOriginal();
-    imagePanel.showModified();
-  }
-  
-  public void createSyntheticImageFromOriginal(double L, double alpha1, double gamma1, double alpha2, double gamma2) {
-	GammaDistribution xVar = new GammaDistribution(L, L);
-    GammaDistribution y1Var = new GammaDistribution(-alpha1, 1 / gamma1);
-    GammaDistribution y2Var = new GammaDistribution(-alpha2, 1 / gamma2);
-
-    double[][] pixels = new double[originalImage.getWidth()][originalImage.getHeight()];
-    for (int x = 0; x < originalImage.getWidth(); x++) {
-      for (int y = 0; y < originalImage.getHeight(); y++) {
-        if (originalImage.getGray(x, y) == 255) {
-          pixels[x][y] = xVar.sample() / y1Var.sample();
-        } else {
-          pixels[x][y] = xVar.sample() / y2Var.sample();
-        }
-      }
-    }
-    originalImage = new SarImage(new SarBand(pixels, "Gray"));
-    modifiableImage = (ColorImage) originalImage.clone();
-    imagePanel.showOriginal();
-    imagePanel.showModified();
-  }
-  
-  public Function<Double, Double> gioPdf(double L, double alpha, double gamma) {
-    return new Function<Double, Double>() {
-    	@Override
-    	public Double apply(Double x) {
-    		return (Math.pow(L, L) * Gamma.gamma(L - alpha) * Math.pow(x, L - 1))
-    			/ (Math.pow(gamma, alpha) * Gamma.gamma(-alpha) * Gamma.gamma(L) * Math.pow(gamma + x * L, L - alpha)); 
-    	}
-	};
-  }
-  
-	public void getAlphasMap(int maskSize, int L) {
-	 int offset = maskSize - 1; 
-	 int jump = 5;
-	 Band band = modifiableImage.getBands().get(0);
-	 System.out.println(band.getRawPixel(0, 0));
-	 double[] alphas = IntStream.rangeClosed(-40, -4).mapToDouble(x -> x / 2.0).toArray();
-	 int alphaWidth = band.getWidth() - 2*offset;
-	 int alphaHeight = band.getHeight() - 2*offset;
-	 double[][] alphasMap = new double[alphaWidth][alphaHeight];
-	
-	 FileWriter f = null;
-	try {
-		f = new FileWriter(new File("alphas_map.csv"));
-	} catch (IOException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-	 
-	 for (int x = offset; x < band.getWidth() - offset; x+= jump) {
-		 for (int y = offset; y < band.getHeight() - offset; y += jump) {
-			 double[] pixelsArr = FilterUtils.getRawPixelsInMask(band, x, y, maskSize);
-			 double avg = DoubleStream.of(pixelsArr).average().getAsDouble() + 0.0005;
-			 double max = Double.NEGATIVE_INFINITY;
-			 double alphaMax = 0;
-			 for (double alpha : alphas) {
-				 Function<Double, Double> gioPdf = gioPdf(L, alpha, -alpha);
-				 double newVal = DoubleStream.of(pixelsArr)
-						 .map(v -> (v + 0.0005) / avg)
-						 .map(val -> gioPdf.apply(val)).reduce(0, (v1, v2) -> {
-							 return v1 + Math.log(v2);});
-				 System.out.println(newVal);
-				 if (x == 50 && y == 110) {
-					 try {
-						f.write(String.format("%f;%f\n", alpha, newVal));
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				 }
-				 if (max < newVal) {
-					 max = newVal;
-					 alphaMax = alpha;
-				 } 
-			 }
-			 if (x == 50 && y == 110) {
-				 try {
-					f.close();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			 }
-			 System.out.println(String.format("x: %d, y: %d, alpha: %f", x, y, alphaMax));
-			 for (int k = x - offset - jump/2; k < x + jump/2; k++) {
-				 if (k >= 0 && k < alphaWidth) {
-					 for (int h = y - offset - jump/2; h < y + jump/2; h++) {
-						 if (h >= 0 && h < alphaHeight) {
-							 alphasMap[k][h] = alphaMax;
-						 }
-					 }
-			 	}
-			 }
-		 } 
-	 }
-	 
-	 originalImage = new SarImage(new SarBand(alphasMap, "Gray"));
-	 modifiableImage = (ColorImage) originalImage.clone();
-	 imagePanel.showOriginal();
-	 imagePanel.showModified();
   }
 
   public float[] createHistogram() {

@@ -72,9 +72,9 @@ public class ImagePanel extends ImageEventAdapter {
   }
 
   public void showModified() {
-    originalImageView.setImage(imageManager.getOriginalImage());
-    imageView.setFitHeight(0);
-    imageView.setFitWidth(0);
+//    originalImageView.setImage(imageManager.getOriginalImage());
+//    imageView.setFitHeight(0);
+//    imageView.setFitWidth(0);
     imageView.setImage(imageManager.getModifiableImage());
     imageView.setStyle("-fx-border-color: #FFF;");
     double width = imageView.getBoundsInLocal().getMaxX();

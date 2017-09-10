@@ -16,6 +16,9 @@ import com.goodengineer.atibackend.transformation.threshold.OtsuThresholdingTran
 import com.goodengineer.atibackend.transformation.threshold.SauvolaThresholdingTransformation;
 import com.goodengineer.atibackend.util.Point;
 
+import model.ImageManager;
+import view.InfoPanel;
+
 public class PlateRecognitionTransformation implements Transformation {
 
 	private static final double MIN_ASPECT_RATIO = 1.5;
@@ -29,33 +32,37 @@ public class PlateRecognitionTransformation implements Transformation {
 	
 	private LogisticMulticlassClassifier letterClassifier;
 	private LogisticMulticlassClassifier numClassifier;
+	private ImageManager imageManager;
+	private InfoPanel infoPanel;
 	
-	public PlateRecognitionTransformation() {
+	public PlateRecognitionTransformation(ImageManager imageManager, InfoPanel infoPanel) {
 		super();
 		letterClassifier = ClassifierLoader.loadLogisticMulticlass("classifiers/lettersClassifier.txt");
 		numClassifier = ClassifierLoader.loadLogisticMulticlass("classifiers/numClassifier.txt");
+		this.imageManager = imageManager;
+		this.infoPanel = infoPanel;
 	}
 
 	@Override
 	public void transform(Band band) {
-		Band original = band.clone();
+		Band aux, original = band.clone();
 		
 		StringBuilder plateNumber = new StringBuilder();
 		
-		System.out.println("Thresholding with Sauvola...");
-		new SauvolaThresholdingTransformation(0.5, 128, 21).transform(band);
+		infoPanel.setText("Thresholding with Sauvola...");
+		new SauvolaThresholdingTransformation(imageManager, 0.5, 128, 21).transform(band);
 		
-		System.out.println("Finding components...");
 		List<Component> rawComponents = ComponentFinder.findComponents(band, 0);
-		System.out.println(rawComponents.size() + " components found.");
+		infoPanel.setText(rawComponents.size() + " components found.");
+		
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+		}
 		
 		int size = band.getHeight() * band.getWidth();
 		List<Component> components = new ArrayList<>();
-		System.out.println("Selecting components...");
 		for (Component component : rawComponents) {	
-//			minComponentSize <= component.size() 
-//					&& component.size() <= maxComponentSize
-//					&& 
 			if (MIN_ASPECT_RATIO <= component.getAspectRatio()
 					&& component.getAspectRatio() <= MAX_ASPECT_RATIO
 					&& MIN_EULER <= component.eulerNumber()
@@ -64,7 +71,21 @@ public class PlateRecognitionTransformation implements Transformation {
 				components.add(component);
 			}
 		}
-		System.out.println(components.size() + " components left.");
+		aux = band.newBlack();
+		for (Component component : components) {
+			for (int[] pixel : component.getPixels()) {
+				aux.setPixel(pixel[0], pixel[1], 255);
+			}
+		}
+		imageManager.update(aux);
+		
+		infoPanel.setText(components.size() + " components left.");
+		
+		try {
+			Thread.sleep(1500);
+		} catch (InterruptedException e) {
+		}
+		
 //		double[][] pixels = new double[band.getWidth()][band.getHeight()];
 //		for (Component component: components) {
 //			for (int[] pixel: component.getPixels()) {
@@ -73,14 +94,29 @@ public class PlateRecognitionTransformation implements Transformation {
 //		}
 //		band.setPixels(pixels);
 		
-		System.out.println("Finding corners...");
 		for (Component component : components) {
-			List<Point> corners = component.getCorners();
-			System.out.println("get corners");
+			List<Point> corners = component.getCorners(imageManager, infoPanel);
 			if (corners.size() == 4) {
 				Band resizedBand = ImageResizer.resizeQuad(original, corners, PLATE_WIDTH, PLATE_HEIGHT);
-				List<Band> digits = DigitsExtractor.extract(resizedBand, 6);
-				if (digits.size() < 6) continue;
+				
+				imageManager.update(resizedBand);
+				infoPanel.setText("Extracted area.");
+				
+				try {
+					Thread.sleep(1500);
+				} catch (InterruptedException e) {
+				}
+				
+				infoPanel.setText("Extracting digits...");
+				List<Band> digits = DigitsExtractor.extract(imageManager, infoPanel, resizedBand, 6);
+				if (digits.size() < 6) {
+					infoPanel.setText("Not a plate!");
+					try {
+						Thread.sleep(1500);
+					} catch (InterruptedException e) {
+					}
+					continue;
+				}
 				for (int i = 0; i < 6; i++) {
 					Band digit = digits.get(i);
 					new OtsuThresholdingTransformation().transform(digit);
@@ -97,8 +133,13 @@ public class PlateRecognitionTransformation implements Transformation {
 						plateNumber.append(numClassifier.classify(FeatureExtractor.extract(fileName)));
 					}
 				}
+				break;
 			}
 		}
-		System.out.println("Finished! Plate number is: " + plateNumber.toString());
+		if (plateNumber.toString().trim().isEmpty()) {
+			infoPanel.setText("Finished! Plate not found :(");
+		} else {
+			infoPanel.setText("Finished! Plate number is: " + plateNumber.toString().toUpperCase());
+		}
 	}
 }

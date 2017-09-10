@@ -52,8 +52,6 @@ public class LineHoughTransformation implements Transformation {
 //				System.out.println(String.format("angle: %g, dist: %g, count: %d", getAngle(angleIndex),
 //						getDist(diag, distIndex), acum[angleIndex][distIndex]));
 				if (acum[angleIndex][distIndex] > threshold) {
-					System.out.println(String.format("angle: %g, dist: %g, count: %d", getAngle(angleIndex),
-							getDist(diag, distIndex), acum[angleIndex][distIndex]));
 					drawLine(getAngle(angleIndex), getDist(diag, distIndex), band);
 				}
 			}

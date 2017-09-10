@@ -12,9 +12,13 @@ import com.goodengineer.atibackend.plates.util.LineUtils;
 import com.goodengineer.atibackend.transformation.filter.MultiFilterTransformation;
 import com.goodengineer.atibackend.transformation.filter.pixelRules.NormPixelRule;
 import com.goodengineer.atibackend.transformation.threshold.OtsuThresholdingTransformation;
+import com.goodengineer.atibackend.util.KeypointsUtils;
 import com.goodengineer.atibackend.util.MaskFactory;
 import com.goodengineer.atibackend.util.MaskFactory.Direction;
 import com.goodengineer.atibackend.util.Point;
+
+import model.ImageManager;
+import view.InfoPanel;
 
 
 class Component {
@@ -79,10 +83,15 @@ class Component {
 		return eulerNumber - 1;
 	}
 	
-	public List<Point> getCorners() {
-		int minSubRegionCol = minCol == 0 ? minCol: minCol - 1;
-		int minSubRegionRow = minRow == 0 ? minRow: minRow - 1;
+	public List<Point> getCorners(ImageManager imageManager, InfoPanel infoPanel) {
+		int minSubRegionCol = minCol <= 0 ? 0 : minCol - 1;
+		int minSubRegionRow = minRow <= 0 ? 0 : minRow - 1;
 		Band subBand = band.subRegion(minSubRegionCol, minSubRegionRow, maxCol + 1, maxRow + 1);
+		if (subBand == null) {
+			return new ArrayList<>();
+		}
+		infoPanel.setText("Finding borders...");
+		imageManager.update(subBand);
 		int width = subBand.getWidth();
 		int height = subBand.getHeight();
 		double[][] newSubPixels = new double[width][height];
@@ -91,7 +100,11 @@ class Component {
 		}
 		subBand.setPixels(newSubPixels);
 
-		System.out.println("	Finding subcomponents...");
+		try {
+			Thread.sleep(1500);
+		} catch (InterruptedException e) {
+		}
+		
 	    List<Component> subComponents = ComponentFinder.findComponents(subBand, 0);
 	    Set<Component> toRemove = new HashSet<>();
 	    for (Component subC : subComponents) {
@@ -112,18 +125,29 @@ class Component {
 			}
 		}
 		
-		System.out.println("	Finding borders...");
 		MultiFilterTransformation.PixelRule rule = new NormPixelRule();
 		List<double[][]> masks = Arrays.asList(MaskFactory.sobel(Direction.E), MaskFactory.sobel(Direction.S));
 	    new MultiFilterTransformation(rule, masks).transform(subBand);
 	    new OtsuThresholdingTransformation().transform(subBand);
 	    
-	    System.out.println("	Finding lines...");
+		imageManager.update(subBand);
+		infoPanel.setText("Finding border lines...");
+		
+		try {
+			Thread.sleep(1500);
+		} catch (InterruptedException e) {
+		}
+	    
 		List<Line> lines = new CustomLineHough(MAX_ANGLE, 1, (int) (width * 0.8), (int) (height * 0.5)).getLines(subBand);
-//		CustomLineHough.paintLines(subBand, lines);
-//		band.setPixels(subBand.pixels);
-//		System.out.println(lines);
-		System.out.println("	Finding corners...");
+		CustomLineHough.paintLines(subBand, lines);
+		imageManager.update(subBand);
+		infoPanel.setText("Finding corners...");
+
+		try {
+			Thread.sleep(1500);
+		} catch (InterruptedException e) {
+		}
+		
 		List<Point> corners = LineUtils.getCorners(lines);
 		List<Point> fixedCorners = new ArrayList<>();
 		for (Point c: corners) {
